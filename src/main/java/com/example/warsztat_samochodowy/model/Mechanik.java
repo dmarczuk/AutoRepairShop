@@ -1,9 +1,15 @@
 package com.example.warsztat_samochodowy.model;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "Mechanicy")
 public class Mechanik {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int MechanikID;
+    @Column(nullable = false)
     private String Imie;
+    @Column(nullable = false)
     private String Nazwisko;
     //private int naprawy;
 

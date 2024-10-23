@@ -1,16 +1,24 @@
 package com.example.warsztat_samochodowy.model;
-
+import jakarta.persistence.*;
 import java.util.Date;
 
+@Entity
+@Table(name = "Naprawy")
 public class Naprawa {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int NaprawaID;
     private Date data_rozpoczecia;
     private Date data_zakonczenia;
     private String stan;
     private String opis_usterki;
     private String protokol_naprawy;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
     private int VIN; // klucz obcy
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
     private int mechanik; // klucz obcy
 
     public void setNaprawaID(int naprawaID) {

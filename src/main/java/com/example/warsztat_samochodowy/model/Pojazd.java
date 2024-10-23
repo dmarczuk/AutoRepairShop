@@ -1,13 +1,17 @@
 package com.example.warsztat_samochodowy.model;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "Pojazdy")
 public class Pojazd {
 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int PojazdID;
     private String rejestracja;
     private String marka;
     private String model;
     private int rocznik;
-    private int klient; // klucz obcy
+    @Id
     private int VIN; // klucz podstawowy
 
     public int getPojazdID() {
@@ -48,14 +52,6 @@ public class Pojazd {
 
     public void setRocznik(int rocznik) {
         this.rocznik = rocznik;
-    }
-
-    public int getKlient() {
-        return klient;
-    }
-
-    public void setKlient(int klient) {
-        this.klient = klient;
     }
 
     public int getVIN() {
