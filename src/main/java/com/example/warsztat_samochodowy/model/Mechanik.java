@@ -2,17 +2,17 @@ package com.example.warsztat_samochodowy.model;
 
 public class Mechanik {
 
-    private int ID;
+    private int MechanikID;
     private String Imie;
     private String Nazwisko;
-    private int naprawy;
+    //private int naprawy;
 
-    public int getID() {
-        return ID;
+    public int getMechanikID() {
+        return MechanikID;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setMechanikID(int mechanikID) {
+        this.MechanikID = mechanikID;
     }
 
     public String getImie() {
@@ -29,13 +29,5 @@ public class Mechanik {
 
     public void setNazwisko(String nazwisko) {
         Nazwisko = nazwisko;
-    }
-
-    public int getNaprawy() {
-        return naprawy;
-    }
-
-    public void setNaprawy(int naprawy) {
-        this.naprawy = naprawy;
     }
 }

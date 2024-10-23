@@ -1,11 +1,10 @@
 package com.example.warsztat_samochodowy.model;
 
-import javax.xml.crypto.Data;
 import java.util.Date;
 
 public class Naprawa {
 
-    private int ID;
+    private int NaprawaID;
     private Date data_rozpoczecia;
     private Date data_zakonczenia;
     private String stan;
@@ -14,8 +13,8 @@ public class Naprawa {
     private int VIN; // klucz obcy
     private int mechanik; // klucz obcy
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setNaprawaID(int naprawaID) {
+        this.NaprawaID = naprawaID;
     }
 
     public void setData_rozpoczecia(Date data_rozpoczecia) {

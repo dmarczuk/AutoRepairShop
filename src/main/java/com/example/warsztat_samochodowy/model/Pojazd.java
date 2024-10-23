@@ -2,7 +2,7 @@ package com.example.warsztat_samochodowy.model;
 
 public class Pojazd {
 
-    private int ID;
+    private int PojazdID;
     private String rejestracja;
     private String marka;
     private String model;
@@ -10,12 +10,12 @@ public class Pojazd {
     private int klient; // klucz obcy
     private int VIN; // klucz podstawowy
 
-    public int getID() {
-        return ID;
+    public int getPojazdID() {
+        return PojazdID;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setPojazdID(int ID) {
+        this.PojazdID = ID;
     }
 
     public String getRejestracja() {
