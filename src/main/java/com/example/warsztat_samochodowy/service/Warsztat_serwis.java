@@ -4,44 +4,107 @@ import com.example.warsztat_samochodowy.model.Klient;
 import com.example.warsztat_samochodowy.model.Mechanik;
 import com.example.warsztat_samochodowy.model.Naprawa;
 import com.example.warsztat_samochodowy.model.Pojazd;
+import com.example.warsztat_samochodowy.repository.KlientRepository;
+import com.example.warsztat_samochodowy.repository.MechanikRepository;
+import com.example.warsztat_samochodowy.repository.NaprawaRepository;
+import com.example.warsztat_samochodowy.repository.PojazdRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+
+@Service
 
 public class Warsztat_serwis {
 
+    private KlientRepository klientRepository;
+    private MechanikRepository mechanikRepository;
+    private NaprawaRepository naprawaRepository;
+    private PojazdRepository pojazdRepository;
+
+
+
     public List<Klient>Podglad_klientow(){
-        return new ArrayList<>();
+        List<Klient> listaKlientow = new ArrayList<>();
+        listaKlientow = klientRepository.findAll();
+        return listaKlientow;
     }
     public void Dodawanie_klienta(Klient klient){
-        // dodanie do bazy
+        Optional<Klient> staryKlient = klientRepository.findByKlientID(klient.getKlientID());
+        if(staryKlient.isEmpty()){
+            klientRepository.save(klient);
+        }
+
     }
     public void Modyfikacje_danych_klienta(Klient klient){
-        // modyfikacja do bazy
+        Optional<Klient> staryKlient = klientRepository.findByKlientID(klient.getKlientID());
+
+        if(staryKlient.isPresent()){
+            //staryKlient.get().setKlientID(klient.getKlientID());
+            staryKlient.get().setImie(klient.getImie());
+            staryKlient.get().setNazwisko(klient.getNazwisko());
+            staryKlient.get().setTelefon(klient.getTelefon());
+            staryKlient.get().setEmail(klient.getEmail());
+        }
+
+        klientRepository.save(staryKlient.get());
     }
     public List<Mechanik>Podglad_mechanikow(){
-        return new ArrayList<>();
+        List<Mechanik> listaMechanikow = new ArrayList<>();
+        listaMechanikow = mechanikRepository.findAll();
+        return listaMechanikow;
     }
     public void Dodawanie_mechanika(Mechanik mechanik){
-        // dodanie do bazy
+        mechanikRepository.save(mechanik);
     }
     public void Usuniecie_danych_mechanika(Mechanik mechanik){
-        // usuniecie z bazy
+        // sprawdzic czy mechanik istnieje w bazie
+        mechanikRepository.delete(mechanik);
     }
     public List<Naprawa>Podglad_napraw(){
-        return new ArrayList<>();
+
+        List<Naprawa> listaNapraw = new ArrayList<>();
+        listaNapraw = naprawaRepository.findAll();
+        return listaNapraw;
     }
     public void Dodawanie_naprawy(Naprawa naprawa){
-        // dodanie do bazy
+       naprawaRepository.save(naprawa);
     }
     public List<Pojazd>Podglad_pojazdow(){
-        return new ArrayList<>();
+
+        List<Pojazd> listaPojazdow = new ArrayList<>();
+        listaPojazdow = pojazdRepository.findAll();
+        return listaPojazdow;
     }
     public void Dodawanie_pojazdu(Pojazd pojazd){
-        // dodanie do bazy
+        Optional<Pojazd> staryPojazd = pojazdRepository.findByPojazdID(pojazd.getPojazdID());
+        if(staryPojazd.isEmpty()) {
+            pojazdRepository.save(pojazd);
+        }
     }
     public void Modyfikacje_danych_pojazdu(Pojazd pojazd){
-        // modyfikacja do bazy
+        Optional<Pojazd> staryPojazd = pojazdRepository.findByPojazdID(pojazd.getPojazdID());
+
+        if(staryPojazd.isPresent()){
+            staryPojazd.get().setPojazdID(pojazd.getPojazdID());
+            staryPojazd.get().setMarka(pojazd.getMarka());
+            staryPojazd.get().setModel(pojazd.getModel());
+            staryPojazd.get().setRejestracja(pojazd.getRejestracja());
+            staryPojazd.get().setRocznik(pojazd.getRocznik());
+        }
+
+        pojazdRepository.save(staryPojazd.get());
+    }
+
+    public void Dodanie_nowego_zgloszenia(Klient klient, Pojazd pojazd){
+
+        Dodawanie_klienta(klient);
+        Dodawanie_pojazdu(pojazd);
+        Naprawa nowa_naprawa = new Naprawa(pojazd.getVIN());
+        Dodawanie_naprawy(nowa_naprawa);
+
     }
 
 }

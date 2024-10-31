@@ -21,6 +21,15 @@ public class Naprawa {
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private int mechanik; // klucz obcy
 
+    public Naprawa(int VIN, int mechanik) {
+        this.VIN = VIN;
+        this.mechanik = mechanik;
+    }
+
+    public Naprawa(int VIN) {
+        this.VIN = VIN;
+    }
+
     public void setNaprawaID(int naprawaID) {
         this.NaprawaID = naprawaID;
     }
