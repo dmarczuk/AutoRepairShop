@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface NaprawaRepository extends JpaRepository<Naprawa, String> {
 
 
-    Optional<Naprawa> findByName(String name);
+    Optional<Naprawa> findByNaprawaID(int naprawaID);
 }
