@@ -14,6 +14,17 @@ public class Pojazd {
     @Id
     private int VIN; // klucz podstawowy
 
+    public Pojazd(String rejestracja, String marka, String model, int rocznik, int VIN) {
+        this.rejestracja = rejestracja;
+        this.marka = marka;
+        this.model = model;
+        this.rocznik = rocznik;
+        this.VIN = VIN;
+    }
+
+    //public Pojazd() {
+    //}
+
     public int getPojazdID() {
         return PojazdID;
     }

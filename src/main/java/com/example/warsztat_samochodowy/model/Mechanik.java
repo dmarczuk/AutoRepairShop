@@ -13,6 +13,15 @@ public class Mechanik {
     private String Nazwisko;
     //private int naprawy;
 
+
+    public Mechanik(String nazwisko, String imie) {
+        this.Nazwisko = nazwisko;
+        this.Imie = imie;
+    }
+
+    //public Mechanik() {
+    //}
+
     public int getMechanikID() {
         return MechanikID;
     }

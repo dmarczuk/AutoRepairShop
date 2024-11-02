@@ -31,12 +31,13 @@ public class Warsztat_serwis {
         listaKlientow = klientRepository.findAll();
         return listaKlientow;
     }
-    public void Dodawanie_klienta(Klient klient){
+    public Klient Dodawanie_klienta(Klient klient){
         Optional<Klient> staryKlient = klientRepository.findByKlientID(klient.getKlientID());
         if(staryKlient.isEmpty()){
             klientRepository.save(klient);
+            return klient;
         }
-
+        return staryKlient.get();
     }
     public void Modyfikacje_danych_klienta(Klient klient){
         Optional<Klient> staryKlient = klientRepository.findByKlientID(klient.getKlientID());
@@ -56,8 +57,9 @@ public class Warsztat_serwis {
         listaMechanikow = mechanikRepository.findAll();
         return listaMechanikow;
     }
-    public void Dodawanie_mechanika(Mechanik mechanik){
+    public Mechanik Dodawanie_mechanika(Mechanik mechanik){
         mechanikRepository.save(mechanik);
+        return mechanik;
     }
     public void Usuniecie_danych_mechanika(Mechanik mechanik){
         // sprawdzic czy mechanik istnieje w bazie
@@ -69,8 +71,9 @@ public class Warsztat_serwis {
         listaNapraw = naprawaRepository.findAll();
         return listaNapraw;
     }
-    public void Dodawanie_naprawy(Naprawa naprawa){
+    public Naprawa Dodawanie_naprawy(Naprawa naprawa){
        naprawaRepository.save(naprawa);
+       return naprawa;
     }
     public List<Pojazd>Podglad_pojazdow(){
 
@@ -78,11 +81,13 @@ public class Warsztat_serwis {
         listaPojazdow = pojazdRepository.findAll();
         return listaPojazdow;
     }
-    public void Dodawanie_pojazdu(Pojazd pojazd){
+    public Pojazd Dodawanie_pojazdu(Pojazd pojazd){
         Optional<Pojazd> staryPojazd = pojazdRepository.findByPojazdID(pojazd.getPojazdID());
         if(staryPojazd.isEmpty()) {
             pojazdRepository.save(pojazd);
+            return pojazd;
         }
+        return staryPojazd.get();
     }
     public void Modyfikacje_danych_pojazdu(Pojazd pojazd){
         Optional<Pojazd> staryPojazd = pojazdRepository.findByPojazdID(pojazd.getPojazdID());
@@ -98,12 +103,13 @@ public class Warsztat_serwis {
         pojazdRepository.save(staryPojazd.get());
     }
 
-    public void Dodanie_nowego_zgloszenia(Klient klient, Pojazd pojazd){
+    public Naprawa Dodanie_nowego_zgloszenia(Klient klient, Pojazd pojazd){
 
         Dodawanie_klienta(klient);
         Dodawanie_pojazdu(pojazd);
         Naprawa nowa_naprawa = new Naprawa(pojazd.getVIN());
         Dodawanie_naprawy(nowa_naprawa);
+        return nowa_naprawa;
 
     }
 

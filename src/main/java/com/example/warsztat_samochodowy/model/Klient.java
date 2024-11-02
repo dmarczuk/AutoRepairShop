@@ -19,6 +19,16 @@ public class Klient {
     @Column(nullable = false)
     private String email;
 
+    public Klient(String imie, String nazwisko, String telefon, String email) {
+        this.Imie = imie;
+        this.Nazwisko = nazwisko;
+        this.telefon = telefon;
+        this.email = email;
+    }
+
+    //public Klient() {
+    //}
+
     public int getKlientID() {
         return KlientID;
     }
