@@ -26,16 +26,17 @@ public class Mechanik_serwis {
         return listaNapraw;
     }
 
-    public void Dodanie_nowego_zgloszenia(Klient klient, Pojazd pojazd, Mechanik mechanik){
+    public Naprawa Dodanie_nowego_zgloszenia(Klient klient, Pojazd pojazd, Mechanik mechanik){
 
         warsztat_serwis.Dodawanie_klienta(klient);
         warsztat_serwis.Dodawanie_pojazdu(pojazd);
-        Naprawa nowa_naprawa = new Naprawa(pojazd.getVIN());
+        Naprawa nowa_naprawa = new Naprawa(pojazd.getVIN(), mechanik.getMechanikID());
         warsztat_serwis.Dodawanie_naprawy(nowa_naprawa);
+        return nowa_naprawa;
 
     }
 
-    public void Modyfikacja_opisu_usterki(int NaprawaID, String opis_usterki, String stan, String protokol_naprawy){
+    public Naprawa Modyfikacja_opisu_usterki(int NaprawaID, String opis_usterki, String stan, String protokol_naprawy){
 
 
         Optional<Naprawa> staraNaprawa = naprawaRepository.findByNaprawaID(NaprawaID);
@@ -48,9 +49,10 @@ public class Mechanik_serwis {
         }
 
         naprawaRepository.save(staraNaprawa.get());
+        return staraNaprawa.get();
     }
 
-    public void Rozpoczecie_naprawy(int NaprawaID, Date data_rozpoczecia){
+    public Naprawa Rozpoczecie_naprawy(int NaprawaID, Date data_rozpoczecia){
 
         Optional<Naprawa> staraNaprawa = naprawaRepository.findByNaprawaID(NaprawaID);
 
@@ -60,10 +62,11 @@ public class Mechanik_serwis {
         }
 
         naprawaRepository.save(staraNaprawa.get());
+        return staraNaprawa.get();
 
     }
 
-    public void Przewidywany_czas_naprawy(int NaprawaID, Date data_zakonczenia){
+    public Naprawa Przewidywany_czas_naprawy(int NaprawaID, Date data_zakonczenia){
 
         Optional<Naprawa> staraNaprawa = naprawaRepository.findByNaprawaID(NaprawaID);
 
@@ -73,5 +76,6 @@ public class Mechanik_serwis {
         }
 
         naprawaRepository.save(staraNaprawa.get());
+        return staraNaprawa.get();
     }
 }
