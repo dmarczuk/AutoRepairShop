@@ -1,48 +1,55 @@
 package com.example.warsztat_samochodowy.model;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "Mechanicy")
 public class Mechanik {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int MechanikID;
+    private int mechanikID;
     @Column(nullable = false)
-    private String Imie;
+    private String imie;
     @Column(nullable = false)
-    private String Nazwisko;
+    private String nazwisko;
     //private int naprawy;
+
+    @OneToMany(mappedBy = "mechanik", cascade = CascadeType.ALL, orphanRemoval = true)
+    //@JoinColumn(name = "klientID")
+    private List<Naprawa> naprawy;
 
 
     public Mechanik(String nazwisko, String imie) {
-        this.Nazwisko = nazwisko;
-        this.Imie = imie;
+        this.nazwisko = nazwisko;
+        this.imie = imie;
     }
 
-    //public Mechanik() {
-    //}
+    public Mechanik() {
+    }
 
     public int getMechanikID() {
-        return MechanikID;
+        return mechanikID;
     }
 
     public void setMechanikID(int mechanikID) {
-        this.MechanikID = mechanikID;
+        this.mechanikID = mechanikID;
     }
 
     public String getImie() {
-        return Imie;
+        return imie;
     }
 
     public void setImie(String imie) {
-        Imie = imie;
+        this.imie = imie;
     }
 
     public String getNazwisko() {
-        return Nazwisko;
+        return nazwisko;
     }
 
     public void setNazwisko(String nazwisko) {
-        Nazwisko = nazwisko;
+        this.nazwisko = nazwisko;
     }
 }

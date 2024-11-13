@@ -1,6 +1,11 @@
 package com.example.warsztat_samochodowy.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -9,36 +14,52 @@ import jakarta.persistence.*;
 public class Klient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int KlientID;
+    //@Column(name = "klient_id")
+    private int klientID;
     @Column(nullable = false)
-    private String Imie;
+    private String imie;
     @Column(nullable = false)
-    private String Nazwisko;
-    @Column(nullable = false)
+    private String nazwisko;
+    @Column(nullable = false, unique = true)
     private String telefon;
     @Column(nullable = false)
     private String email;
 
-    public Klient(String imie, String nazwisko, String telefon, String email) {
-        this.Imie = imie;
-        this.Nazwisko = nazwisko;
+    //@JsonIgnoreProperties("klient")
+    @OneToMany(cascade = CascadeType.ALL) //mappedBy = "klient"
+    //@OneToMany(mappedBy = "klient", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "klientID")
+    @JsonManagedReference
+    private List<Pojazd> pojazdy = new ArrayList<>();
+
+    public Klient(String imie, String nazwisko, String telefon, String email, List<Pojazd> pojazdy) {
+        this.imie = imie;
+        this.nazwisko = nazwisko;
         this.telefon = telefon;
         this.email = email;
     }
 
-    //public Klient() {
-    //}
+    public Klient() {
+    }
+
+    public List<Pojazd> getPojazdy() {
+        return pojazdy;
+    }
+
+    public void setPojazdy(List<Pojazd> pojazdy) {
+        this.pojazdy = pojazdy;
+    }
 
     public int getKlientID() {
-        return KlientID;
+        return klientID;
     }
 
     public String getImie() {
-        return Imie;
+        return imie;
     }
 
     public String getNazwisko() {
-        return Nazwisko;
+        return nazwisko;
     }
 
     public String getEmail() {
@@ -51,15 +72,15 @@ public class Klient {
 
     public void setKlientID(int KlientID) {
 
-        this.KlientID = KlientID;
+        this.klientID = KlientID;
     }
 
     public void setImie(String imie) {
-        Imie = imie;
+        this.imie = imie;
     }
 
     public void setNazwisko(String nazwisko) {
-        Nazwisko = nazwisko;
+        this.nazwisko = nazwisko;
     }
 
     public void setTelefon(String telefon) {

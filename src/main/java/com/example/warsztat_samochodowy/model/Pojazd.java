@@ -1,36 +1,72 @@
 package com.example.warsztat_samochodowy.model;
+import ch.qos.logback.core.net.server.Client;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "Pojazdy")
 public class Pojazd {
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int PojazdID;
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String pojazdID = UUID.randomUUID().toString();
+
+    @Column(unique = true, nullable = false)
     private String rejestracja;
     private String marka;
     private String model;
     private int rocznik;
     @Id
-    private int VIN; // klucz podstawowy
+    //@JsonProperty("vin")
+    private String vin; // klucz podstawowy
 
-    public Pojazd(String rejestracja, String marka, String model, int rocznik, int VIN) {
+//    @JsonIgnoreProperties("pojazdy")
+//    @ManyToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "klient_klientID", insertable = false, updatable = false)
+//
+    @ManyToOne
+    @JoinColumn(name = "klientid")
+    @JsonBackReference
+    private Klient klient;
+    //private int klientID;
+
+    @OneToMany()
+    //@OneToMany(mappedBy = "pojazd", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "vin")
+    private List<Naprawa> naprawy;
+
+
+
+    public Pojazd(String rejestracja, String marka, String model, int rocznik, String vin) {
         this.rejestracja = rejestracja;
         this.marka = marka;
         this.model = model;
         this.rocznik = rocznik;
-        this.VIN = VIN;
+        this.vin = vin;
     }
 
-    //public Pojazd() {
-    //}
-
-    public int getPojazdID() {
-        return PojazdID;
+    public Pojazd() {
     }
 
-    public void setPojazdID(int ID) {
-        this.PojazdID = ID;
+    public Klient getKlient() {
+        return klient;
+    }
+
+    public void setKlient(Klient klient) {
+        this.klient = klient;
+    }
+
+    public String getPojazdID() {
+        return pojazdID;
+    }
+
+    public void setPojazdID(String ID) {
+        this.pojazdID = ID;
     }
 
     public String getRejestracja() {
@@ -65,11 +101,11 @@ public class Pojazd {
         this.rocznik = rocznik;
     }
 
-    public int getVIN() {
-        return VIN;
+    public String getVIN() {
+        return vin;
     }
 
-    public void setVIN(int VIN) {
-        this.VIN = VIN;
+    public void setVIN(String VIN) {
+        this.vin = VIN;
     }
 }
