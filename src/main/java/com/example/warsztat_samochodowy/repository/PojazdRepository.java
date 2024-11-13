@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface PojazdRepository extends JpaRepository<Pojazd, String> {
 
 
-    Optional<Pojazd> findByPojazdID(int PojazdID);
+    Optional<Pojazd> findByVin(String vin);
 }
