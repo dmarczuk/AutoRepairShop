@@ -1,11 +1,12 @@
 package com.example.warsztat_samochodowy.controller;
 
 
-import com.example.warsztat_samochodowy.model.Klient;
-import com.example.warsztat_samochodowy.model.Mechanik;
-import com.example.warsztat_samochodowy.model.Naprawa;
-import com.example.warsztat_samochodowy.model.Pojazd;
+import com.example.warsztat_samochodowy.dto.NaprawaDto;
+import com.example.warsztat_samochodowy.dto.PojazdKlientDto;
+import com.example.warsztat_samochodowy.dto.ZgloszenieDto;
+import com.example.warsztat_samochodowy.model.*;
 import com.example.warsztat_samochodowy.service.Warsztat_serwis;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,9 +63,13 @@ public class WarsztatController {
     }
 
     @PostMapping("/dodaj/naprawe")
-    public ResponseEntity<Naprawa> Dodaj_naprawe(@RequestBody Naprawa naprawa){
-        Naprawa nowa_naprawa = warsztat_serwis.Dodawanie_naprawy(naprawa);
-        return ResponseEntity.ok(nowa_naprawa);
+    public ResponseEntity<Naprawa> Dodaj_naprawe(@RequestBody NaprawaDto naprawaDto){
+        try {
+            Naprawa nowa_naprawa = warsztat_serwis.Dodawanie_naprawy(naprawaDto);
+            return ResponseEntity.ok(nowa_naprawa);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     @GetMapping("/pojazdy")
@@ -73,10 +78,14 @@ public class WarsztatController {
         return lista_pojazdow;
     }
 
-    @PostMapping("/dodaj/pojazdy")
-    public ResponseEntity<Pojazd> Dodaj_pojazd(@RequestBody Pojazd pojazd){
-        Pojazd nowy_pojazd = warsztat_serwis.Dodawanie_pojazdu(pojazd);
-        return ResponseEntity.ok(nowy_pojazd);
+    @PostMapping("/dodaj/pojazd")
+    public ResponseEntity<Pojazd> Dodaj_pojazd(@RequestBody PojazdKlientDto pojazdKlientDto){
+        try {
+            Pojazd nowy_pojazd = warsztat_serwis.Dodawanie_pojazdu(pojazdKlientDto.getPojazd(), pojazdKlientDto.getTelefonKlienta());
+            return ResponseEntity.status(HttpStatus.CREATED).body(nowy_pojazd);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     @PutMapping("/modyfikuj/dane/pojazdow")
@@ -86,8 +95,12 @@ public class WarsztatController {
     }
 
     @PostMapping("/dodaj/nowe/zgloszenie")
-    public ResponseEntity<Naprawa> Nowe_zgloszenie(@RequestBody Klient klient, Pojazd pojazd){
-        Naprawa naprawa = warsztat_serwis.Dodanie_nowego_zgloszenia(klient, pojazd);
-        return ResponseEntity.ok(naprawa);
+    public ResponseEntity<Naprawa> Nowe_zgloszenie(@RequestBody ZgloszenieDto zgloszenie) {
+        try {
+            Naprawa naprawa = warsztat_serwis.Dodanie_nowego_zgloszenia(zgloszenie.getKlient(), zgloszenie.getPojazd());
+            return ResponseEntity.ok(naprawa);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 }

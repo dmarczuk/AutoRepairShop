@@ -6,6 +6,7 @@ import com.example.warsztat_samochodowy.model.Naprawa;
 import com.example.warsztat_samochodowy.model.Pojazd;
 import com.example.warsztat_samochodowy.service.Mechanik_serwis;
 import com.example.warsztat_samochodowy.service.Warsztat_serwis;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -24,9 +25,14 @@ public class MechanikController {
     }
 
     @PostMapping("/dodaj/nowe_zgloszenie")
-    public ResponseEntity<Naprawa> Nowe_zgloszenie(@RequestBody Klient klient, Pojazd pojazd, Mechanik mechanik){
-        Naprawa naprawa = mechanik_serwis.Dodanie_nowego_zgloszenia(klient, pojazd, mechanik);
-        return ResponseEntity.ok(naprawa);
+    public ResponseEntity<Naprawa> PrzyjecieNaprawy (@RequestBody Naprawa naprawa, Mechanik mechanik){
+        try {
+            //Naprawa naprawa = mechanik_serwis.Dodanie_nowego_zgloszenia(klient, pojazd, mechanik);
+            Naprawa przyjetaNaprawa = mechanik_serwis.Przyjecie_zgloszenia(naprawa, mechanik);
+            return ResponseEntity.ok(przyjetaNaprawa);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     @PutMapping("/modyfikuj/opis_usterki")

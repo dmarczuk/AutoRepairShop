@@ -7,6 +7,7 @@ import com.example.warsztat_samochodowy.model.Pojazd;
 import com.example.warsztat_samochodowy.repository.NaprawaRepository;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,13 +27,14 @@ public class Mechanik_serwis {
         return listaNapraw;
     }
 
-    public Naprawa Dodanie_nowego_zgloszenia(Klient klient, Pojazd pojazd, Mechanik mechanik){
+    public Naprawa Przyjecie_zgloszenia(Naprawa naprawa, Mechanik mechanik) throws SQLException {
 
-        warsztat_serwis.Dodawanie_klienta(klient);
-        warsztat_serwis.Dodawanie_pojazdu(pojazd);
-        Naprawa nowa_naprawa = new Naprawa(pojazd.getVIN(), mechanik.getMechanikID());
-        warsztat_serwis.Dodawanie_naprawy(nowa_naprawa);
-        return nowa_naprawa;
+        //warsztat_serwis.Dodawanie_klienta(klient);
+        //warsztat_serwis.Dodawanie_pojazdu(pojazd, klient.getTelefon());
+        //Naprawa nowa_naprawa = new Naprawa(pojazd, mechanik);
+        naprawa.setMechanik(mechanik);
+        naprawaRepository.save(naprawa);
+        return naprawa;
 
     }
 
