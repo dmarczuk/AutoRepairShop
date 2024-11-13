@@ -10,17 +10,39 @@ localhost:8080/dodaj/klienta
     "email": "bozenakowalska@gmail.com"
 }
 
+localhost:8080/modyfikuj/dane/klienta
+{
+    "imie": "Adam",
+    "nazwisko": "Kowalski",
+    "telefon": "753289111",
+    "email": "kowalski@gmail.com"
+}
+
+localhost:8080/pojazdy
+
 localhost:8080/dodaj/pojazd
 
 {
-    "rejestracja": "DW 19831",
-    "marka": "Audi",
-    "model": "S7",
-    "rocznik": 2011,
-    "VIN": "ABSDAE221293821283"
+    "pojazd": {
+        "rejestracja": "DW 19831",
+        "marka": "Audi",
+        "model": "S7",
+        "rocznik": 2011,
+        "VIN": "ABSDAE221293821283"
+    },
+    "telefonKlienta": "753289111"
 }
 
+localhost:8080/mechanicy
+
 localhost:8080/dodaj/mechanika
+
+{
+    "imie": "Zdzisław",
+    "nazwisko": "Przybylski"
+}
+
+localhost:8080/usun/mechanika
 
 {
     "imie": "Zdzisław",
@@ -44,19 +66,19 @@ localhost:8080/dodaj/naprawe
 localhost:8080/dodaj/nowe/zgloszenie
 
 {
-    "imie": "Bozena",
-    "nazwisko": "Kowalska",
-    "telefon": "753289111",
-    "email": "bozenakowalska@gmail.com",
-    "pojazdy": [
-    {
-        "rejestracja": "DW 19831",
-        "marka": "Audi",
-        "model": "S7",
-        "rocznik": 2011,
-        "vin": "ABSDAE221293821283"
-    }
-    ]
+     "klient": {
+         "imie": "Piotr",
+         "nazwisko": "Kowalski",
+         "telefon": "953289111",
+         "email": "bozenakowalska@gmail.com"
+     },
+     "pojazd": {
+         "rejestracja": "ZW 19831",
+         "marka": "Audi",
+         "model": "S7",
+         "rocznik": 2011,
+         "vin": "GGGDAE221293821283"
+     }
 }
 
 localhost:8080/dodaj/nowe_zgloszenie
@@ -79,3 +101,4 @@ localhost:8080/dodaj/nowe_zgloszenie
         "nazwisko": "Przybylski"
     }
 }
+

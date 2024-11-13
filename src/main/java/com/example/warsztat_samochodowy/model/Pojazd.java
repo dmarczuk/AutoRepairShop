@@ -35,7 +35,7 @@ public class Pojazd {
     private Klient klient;
     //private int klientID;
 
-    @OneToMany()
+    @OneToMany(cascade = CascadeType.ALL)
     //@OneToMany(mappedBy = "pojazd", cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "vin")
     private List<Naprawa> naprawy;

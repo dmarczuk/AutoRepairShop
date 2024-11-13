@@ -3,6 +3,7 @@ package com.example.warsztat_samochodowy.controller;
 
 import com.example.warsztat_samochodowy.dto.NaprawaDto;
 import com.example.warsztat_samochodowy.dto.PojazdKlientDto;
+import com.example.warsztat_samochodowy.dto.UpdateKlientRequest;
 import com.example.warsztat_samochodowy.dto.ZgloszenieDto;
 import com.example.warsztat_samochodowy.model.*;
 import com.example.warsztat_samochodowy.service.Warsztat_serwis;
@@ -28,14 +29,22 @@ public class WarsztatController {
 
     @PostMapping("/dodaj/klienta")
     public ResponseEntity<Klient> Dodaj_klienta(@RequestBody Klient klient){
-        Klient nowy_klient = warsztat_serwis.Dodawanie_klienta(klient);
-        return ResponseEntity.ok(nowy_klient);
+        try {
+            Klient nowy_klient = warsztat_serwis.Dodawanie_klienta(klient);
+            return ResponseEntity.ok(nowy_klient);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+        }
     }
 
-    @PutMapping("/modyfikuj/dane/klienta")
-    public ResponseEntity<Klient> Modyfikuj_dane_klienta(@RequestBody Klient klient){
-        warsztat_serwis.Modyfikacje_danych_klienta(klient);
-        return ResponseEntity.ok(klient);
+    @PatchMapping("/modyfikuj/dane/klienta")
+    public ResponseEntity<Klient> Modyfikuj_dane_klienta(@RequestBody UpdateKlientRequest klientRequest){
+        try {
+            Klient klient = warsztat_serwis.Modyfikacje_danych_klienta(klientRequest);
+            return ResponseEntity.ok(klient);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     @GetMapping("/mechanicy")
@@ -63,9 +72,9 @@ public class WarsztatController {
     }
 
     @PostMapping("/dodaj/naprawe")
-    public ResponseEntity<Naprawa> Dodaj_naprawe(@RequestBody NaprawaDto naprawaDto){
+    public ResponseEntity<Naprawa> Dodaj_naprawe(@RequestBody Naprawa naprawa){
         try {
-            Naprawa nowa_naprawa = warsztat_serwis.Dodawanie_naprawy(naprawaDto);
+            Naprawa nowa_naprawa = warsztat_serwis.Dodawanie_naprawy(naprawa);
             return ResponseEntity.ok(nowa_naprawa);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -100,7 +109,7 @@ public class WarsztatController {
             Naprawa naprawa = warsztat_serwis.Dodanie_nowego_zgloszenia(zgloszenie.getKlient(), zgloszenie.getPojazd());
             return ResponseEntity.ok(naprawa);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         }
     }
 }
