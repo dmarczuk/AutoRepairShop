@@ -28,9 +28,19 @@ localhost:8080/dodaj/pojazd
         "marka": "Audi",
         "model": "S7",
         "rocznik": 2011,
-        "VIN": "ABSDAE221293821283"
+        "vin": "ABSDAE221293821283"
     },
     "telefonKlienta": "753289111"
+}
+
+localhost:8080/modyfikuj/dane/pojazdow
+
+{
+     "rejestracja": "DW 20131",
+     "marka": "Audi",
+     "model": "S7",
+     "rocznik": 2011,
+     "vin": "ABSDAE221293821283"
 }
 
 localhost:8080/mechanicy
@@ -49,13 +59,16 @@ localhost:8080/usun/mechanika
     "nazwisko": "Przybylski"
 }
 
-localhost:8080/dodaj/naprawe
+localhost:8080/naprawy
+
+localhost:8080/dodaj/naprawe  // jesli brak naprawy to jakis komunikat trzeba
+np dana naprawa jeszcze nie istnieje
 
 {
     "pojazd":
     {
-        "VIN": "ABSDAE221293821283"
-    }
+        "vin": "ABSDAE221293821283"
+    },
     "mechanik":
     {
         "imie": "Zdzisław",
@@ -64,20 +77,36 @@ localhost:8080/dodaj/naprawe
 }
 
 localhost:8080/dodaj/nowe/zgloszenie
-
+// dla nieistniejacego klienta
 {
      "klient": {
          "imie": "Piotr",
          "nazwisko": "Kowalski",
          "telefon": "953289111",
-         "email": "bozenakowalska@gmail.com"
+         "email": "kowalski_piotr@gmail.com"
      },
      "pojazd": {
-         "rejestracja": "ZW 19831",
+         "rejestracja": "KR 19831",
          "marka": "Audi",
          "model": "S7",
          "rocznik": 2011,
-         "vin": "GGGDAE221293821283"
+         "vin": "XXXDAE221293821283"
+     }
+}
+// dla instniejacego klienta z pojazdem - OK
+{
+     "klient": {
+         "imie": "Adam",
+         "nazwisko": "Kowalski",
+         "telefon": "753289111",
+         "email": "kowalski@gmail.com"
+     },
+     "pojazd": {
+         "rejestracja": "DW 20131",
+         "marka": "Audi",
+         "model": "S7",
+         "rocznik": 2011,
+         "vin": "ABSDAE221293821283"
      }
 }
 
