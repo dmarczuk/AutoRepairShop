@@ -2,9 +2,7 @@ package com.example.warsztat_samochodowy.service;
 
 import com.example.warsztat_samochodowy.dto.NaprawaDto;
 import com.example.warsztat_samochodowy.dto.UpdateKlientRequest;
-import com.example.warsztat_samochodowy.error.KlientAlreadyExistError;
-import com.example.warsztat_samochodowy.error.MechanikAlreadyExistError;
-import com.example.warsztat_samochodowy.error.PojazdAlreadyExistError;
+import com.example.warsztat_samochodowy.error.*;
 import com.example.warsztat_samochodowy.model.Klient;
 import com.example.warsztat_samochodowy.model.Mechanik;
 import com.example.warsztat_samochodowy.model.Naprawa;
@@ -17,6 +15,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -53,40 +52,40 @@ public class Warsztat_serwis {
     }
     @Transactional
     public Klient Dodawanie_klienta(Klient klient){
-        try {
-            return klientRepository.save(klient);
-        } catch (Exception e) {
+        Optional<Klient> existingKlient = klientRepository.findByTelefon(klient.getTelefon());
+        if (existingKlient.isPresent()) {
             throw new KlientAlreadyExistError("Klient z podanym numerem telefonu już istnieje w bazie");
         }
+        return klientRepository.save(klient);
     }
     public Klient Modyfikacje_danych_klienta(UpdateKlientRequest klient){
         Optional<Klient> staryKlient = klientRepository.findByTelefon(klient.getTelefon());
-
-        if(staryKlient.isPresent()){
-            //staryKlient.get().setKlientID(klient.getKlientID());
-            staryKlient.get().setImie(klient.getImie());
-            staryKlient.get().setNazwisko(klient.getNazwisko());
-            staryKlient.get().setEmail(klient.getEmail());
-            return klientRepository.save(staryKlient.get());
-        } else {
-            throw new EntityNotFoundException("Klient nie istnieje w bazie");
+        if (staryKlient.isEmpty()) {
+            throw new KlientNotFoundError("Nie znaleziono klienta z podanym numerem telefonu");
         }
+        staryKlient.get().setImie(klient.getImie());
+        staryKlient.get().setNazwisko(klient.getNazwisko());
+        staryKlient.get().setEmail(klient.getEmail());
+        return klientRepository.save(staryKlient.get());
     }
     public List<Mechanik>Podglad_mechanikow(){
         List<Mechanik> listaMechanikow = new ArrayList<>();
         listaMechanikow = mechanikRepository.findAll();
         return listaMechanikow;
     }
-    public Mechanik Dodawanie_mechanika(Mechanik mechanik){
-        try {
-            return mechanikRepository.save(mechanik);
-        } catch (Exception e) {
+    public Mechanik Dodawanie_mechanika(Mechanik mechanik) {
+        Optional<Mechanik> existingMechanik = mechanikRepository.findByImieAndNazwisko(mechanik.getImie(), mechanik.getNazwisko());
+        if (existingMechanik.isPresent()) {
             throw new MechanikAlreadyExistError("Mechanik z takim imieniem i nazwiskiem już istnieje w bazie");
         }
+        return mechanikRepository.save(mechanik);
     }
     public void Usuniecie_danych_mechanika(Mechanik mechanik){
         Optional<Mechanik> mechanikZBazy = mechanikRepository.findByImieAndNazwisko(mechanik.getImie(), mechanik.getNazwisko());
-        mechanikZBazy.ifPresent(mechanikRepository::delete);
+        if (mechanikZBazy.isEmpty()) {
+            throw new MechanikNotFoundError("Nie znalezniono mechanika z podanym imieniem i nazwiskiem");
+        }
+        mechanikRepository.delete(mechanik);
     }
     public List<Naprawa>Podglad_napraw(){
 
@@ -127,30 +126,27 @@ public class Warsztat_serwis {
     @Transactional
     public Pojazd Dodawanie_pojazdu(Pojazd pojazd, String telefon) {
         Optional<Klient> klient = klientRepository.findByTelefon(telefon);
-        try {
-            if (klient.isPresent()) {
-                pojazd.setKlient(klient.get());
-                return pojazdRepository.save(pojazd);
-            } else {
-                throw new EntityNotFoundException("Klient z podanym telefonem nie istnieje w bazie");
-            }
-        } catch (Exception e) {
+        Optional<Pojazd> existingPojazd = pojazdRepository.findByVin(pojazd.getVIN());
+        if (existingPojazd.isPresent()) {
             throw new PojazdAlreadyExistError("Pojazd z podanym numerem VIN istnieje już w bazie");
         }
+        if (klient.isEmpty()) {
+            throw new KlientNotFoundError("Klient z podanym telefonem nie istnieje w bazie");
+        }
+        pojazd.setKlient(klient.get());
+        return pojazdRepository.save(pojazd);
     }
     public void Modyfikacje_danych_pojazdu(Pojazd pojazd){
         Optional<Pojazd> staryPojazd = pojazdRepository.findByVin(pojazd.getVIN());
-
-        if(staryPojazd.isPresent()){
-            staryPojazd.get().setPojazdID(pojazd.getPojazdID());
-            staryPojazd.get().setMarka(pojazd.getMarka());
-            staryPojazd.get().setModel(pojazd.getModel());
-            staryPojazd.get().setRejestracja(pojazd.getRejestracja());
-            staryPojazd.get().setRocznik(pojazd.getRocznik());
-            pojazdRepository.save(staryPojazd.get());
-        } else {
-            throw new EntityNotFoundException("Pojazd nie istnieje w bazie");
+        if (staryPojazd.isEmpty()) {
+            throw new PojazdNotFoundError("Pojazd z podanym numerem VIN nie istnieje w bazie");
         }
+        staryPojazd.get().setPojazdID(pojazd.getPojazdID());
+        staryPojazd.get().setMarka(pojazd.getMarka());
+        staryPojazd.get().setModel(pojazd.getModel());
+        staryPojazd.get().setRejestracja(pojazd.getRejestracja());
+        staryPojazd.get().setRocznik(pojazd.getRocznik());
+        pojazdRepository.save(staryPojazd.get());
     }
 
     @Transactional

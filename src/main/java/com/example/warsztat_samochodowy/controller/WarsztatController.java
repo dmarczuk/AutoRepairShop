@@ -29,22 +29,14 @@ public class WarsztatController {
 
     @PostMapping("/dodaj/klienta")
     public ResponseEntity<Klient> Dodaj_klienta(@RequestBody Klient klient){
-        try {
-            Klient nowy_klient = warsztat_serwis.Dodawanie_klienta(klient);
-            return ResponseEntity.ok(nowy_klient);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
-        }
+        Klient nowy_klient = warsztat_serwis.Dodawanie_klienta(klient);
+        return ResponseEntity.ok(nowy_klient);
     }
 
     @PatchMapping("/modyfikuj/dane/klienta")
     public ResponseEntity<Klient> Modyfikuj_dane_klienta(@RequestBody UpdateKlientRequest klientRequest){
-        try {
-            Klient klient = warsztat_serwis.Modyfikacje_danych_klienta(klientRequest);
-            return ResponseEntity.ok(klient);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+        Klient klient = warsztat_serwis.Modyfikacje_danych_klienta(klientRequest);
+        return ResponseEntity.ok(klient);
     }
 
     @GetMapping("/mechanicy")

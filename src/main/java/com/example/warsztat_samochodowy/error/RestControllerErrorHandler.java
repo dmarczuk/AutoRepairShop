@@ -8,9 +8,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
 public class RestControllerErrorHandler {
+
     @ExceptionHandler(KlientAlreadyExistError.class)
     @ResponseBody
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse klientAlreadyExist(KlientAlreadyExistError exception) {
         String message = exception.getMessage();
         return new ErrorResponse(message, HttpStatus.CONFLICT);
@@ -30,5 +31,29 @@ public class RestControllerErrorHandler {
     public ErrorResponse mechanikAlreadyExist(MechanikAlreadyExistError exception) {
         String message = exception.getMessage();
         return new ErrorResponse(message, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(KlientNotFoundError.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse klientNotFoundError(KlientNotFoundError exception) {
+        String message = exception.getMessage();
+        return new ErrorResponse(message, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(MechanikNotFoundError.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse mechanikNotFoundError(MechanikNotFoundError exception) {
+        String message = exception.getMessage();
+        return new ErrorResponse(message, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(PojazdNotFoundError.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse pojazdNotFoundError(PojazdNotFoundError exception) {
+        String message = exception.getMessage();
+        return new ErrorResponse(message, HttpStatus.NOT_FOUND);
     }
 }
