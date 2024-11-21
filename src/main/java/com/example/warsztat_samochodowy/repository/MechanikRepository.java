@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface MechanikRepository extends JpaRepository<Mechanik, String> {
+public interface MechanikRepository extends JpaRepository<Mechanik, Integer> {
 
 
     Optional<Mechanik> findByMechanikID(int mechanikID);

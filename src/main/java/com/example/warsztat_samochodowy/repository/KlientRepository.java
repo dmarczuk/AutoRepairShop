@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface KlientRepository extends JpaRepository<Klient, String> {
+public interface KlientRepository extends JpaRepository<Klient, Integer> {
 
 
     Optional<Klient> findByKlientID(int klientID);

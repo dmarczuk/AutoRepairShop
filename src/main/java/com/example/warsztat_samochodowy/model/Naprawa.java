@@ -15,11 +15,11 @@ public class Naprawa {
     private String opis_usterki;
     private String protokol_naprawy;
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "mechanikID", insertable = false, updatable = false)
+    @JoinColumn(name = "mechanikID")
     private Mechanik mechanik;
     //private int VIN; // klucz obcy
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "vin", insertable = false, updatable = false)
+    @JoinColumn(name = "vin")
     private Pojazd pojazd; // klucz obcy
 
     public Naprawa(Pojazd pojazd, Mechanik mechanik) {
