@@ -1,5 +1,6 @@
 package com.example.warsztat_samochodowy.service;
 
+import com.example.warsztat_samochodowy.dto.NaprawaDto;
 import com.example.warsztat_samochodowy.dto.UpdateKlientRequest;
 import com.example.warsztat_samochodowy.error.KlientAlreadyExistError;
 import com.example.warsztat_samochodowy.error.MechanikAlreadyExistError;
@@ -84,7 +85,6 @@ public class Warsztat_serwis {
         }
     }
     public void Usuniecie_danych_mechanika(Mechanik mechanik){
-        // sprawdzic czy mechanik istnieje w bazie
         Optional<Mechanik> mechanikZBazy = mechanikRepository.findByImieAndNazwisko(mechanik.getImie(), mechanik.getNazwisko());
         mechanikZBazy.ifPresent(mechanikRepository::delete);
     }
@@ -95,12 +95,26 @@ public class Warsztat_serwis {
         return listaNapraw;
     }
     public Naprawa Dodawanie_naprawy(Naprawa naprawa) throws SQLException {
-        Optional<Pojazd> pojazd = pojazdRepository.findByVin(naprawa.getPojazd().getVIN());
-        Optional<Mechanik> mechanik = mechanikRepository.findByImieAndNazwisko(naprawa.getMechanik().getImie(), naprawa.getMechanik().getNazwisko());
-        if (pojazd.isPresent() && mechanik.isPresent()) {
-           return naprawaRepository.save(naprawa);
-        } else {
+        try {
+            return naprawaRepository.save(naprawa);
+        } catch (Exception e) {
             throw new SQLException("Nie udalo sie utworzyc naprawy");
+        }
+    }
+
+    public Naprawa Dodanie_mechanika_do_naprawy(NaprawaDto naprawaDto) throws SQLException {
+        //Optional<Pojazd> pojazd = pojazdRepository.findByVin(naprawaDto.getPojazd().getVIN());
+        Optional<Mechanik> mechanik = mechanikRepository.findByImieAndNazwisko(naprawaDto.getMechanik().getImie(), naprawaDto.getMechanik().getNazwisko());
+        try {
+            if (mechanik.isPresent()) {
+                Optional<Naprawa> naprawa = naprawaRepository.findById(naprawaDto.getNaprawaID());
+                naprawa.get().setMechanik(mechanik.get());
+                return naprawaRepository.save(naprawa.get());
+            } else {
+                throw new SQLException("Nie udalo sie utworzyc naprawy");
+            }
+        } catch (Exception e) {
+            throw new SQLException("Nie udalo sie dodac mechanika do naprawy");
         }
     }
     public List<Pojazd>Podglad_pojazdow(){
@@ -139,7 +153,9 @@ public class Warsztat_serwis {
         }
     }
 
+    @Transactional
     public Naprawa Dodanie_nowego_zgloszenia(Klient klient, Pojazd pojazd) throws SQLException {
+        //??? za pierwszym razem nie dziala - if nie wchodza??? debugowac trzeba
         Optional<Klient> klientInDatabase = klientRepository.findByTelefon(klient.getTelefon());
         Optional<Pojazd> pojazdInDatabase = pojazdRepository.findByVin(pojazd.getVIN());
         if (klientInDatabase.isEmpty()) {
@@ -147,8 +163,8 @@ public class Warsztat_serwis {
         }
         Naprawa nowa_naprawa;
         if (pojazdInDatabase.isEmpty()) {
-            Dodawanie_pojazdu(pojazd, klient.getTelefon());  // Dodawanie_pojazdu(pojazd, klient);
-            nowa_naprawa = new Naprawa(pojazd);
+            Pojazd savedPojazd = Dodawanie_pojazdu(pojazd, klient.getTelefon());// Dodawanie_pojazdu(pojazd, klient);
+            nowa_naprawa = new Naprawa(savedPojazd);
         } else {
             nowa_naprawa = new Naprawa(pojazdInDatabase.get());
         }

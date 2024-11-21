@@ -71,10 +71,10 @@ public class WarsztatController {
         return lista_napraw;
     }
 
-    @PostMapping("/dodaj/naprawe")
-    public ResponseEntity<Naprawa> Dodaj_naprawe(@RequestBody Naprawa naprawa){
+    @PatchMapping("/dodaj/naprawe")
+    public ResponseEntity<Naprawa> Dodaj_naprawe(@RequestBody NaprawaDto naprawaDto){
         try {
-            Naprawa nowa_naprawa = warsztat_serwis.Dodawanie_naprawy(naprawa);
+            Naprawa nowa_naprawa = warsztat_serwis.Dodanie_mechanika_do_naprawy(naprawaDto);
             return ResponseEntity.ok(nowa_naprawa);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -97,7 +97,7 @@ public class WarsztatController {
         }
     }
 
-    @PutMapping("/modyfikuj/dane/pojazdow")
+    @PatchMapping("/modyfikuj/dane/pojazdow")
     public ResponseEntity<Pojazd> Modyfikuj_pojazd(@RequestBody Pojazd pojazd){
         warsztat_serwis.Modyfikacje_danych_pojazdu(pojazd);
         return ResponseEntity.ok(pojazd);
@@ -107,7 +107,7 @@ public class WarsztatController {
     public ResponseEntity<Naprawa> Nowe_zgloszenie(@RequestBody ZgloszenieDto zgloszenie) {
         try {
             Naprawa naprawa = warsztat_serwis.Dodanie_nowego_zgloszenia(zgloszenie.getKlient(), zgloszenie.getPojazd());
-            return ResponseEntity.ok(naprawa);
+            return ResponseEntity.status(HttpStatus.CREATED).body(naprawa);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         }
