@@ -65,6 +65,16 @@ localhost:8080/dodaj/naprawe  // jesli brak naprawy to jakis komunikat trzeba
 np dana naprawa jeszcze nie istnieje
 
 {
+    "naprawaID": 1,
+
+    "mechanik":
+    {
+        "imie": "Zdzisław",
+        "nazwisko": "Przybylski"
+    }
+}
+
+{
     "pojazd":
     {
         "vin": "ABSDAE221293821283"

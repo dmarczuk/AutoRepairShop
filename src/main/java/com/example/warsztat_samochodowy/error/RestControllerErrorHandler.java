@@ -56,4 +56,12 @@ public class RestControllerErrorHandler {
         String message = exception.getMessage();
         return new ErrorResponse(message, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(NaprawaNotFoundError.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse naprawaNotFoundError(NaprawaNotFoundError exception) {
+        String message = exception.getMessage();
+        return new ErrorResponse(message, HttpStatus.NOT_FOUND);
+    }
 }

@@ -65,12 +65,8 @@ public class WarsztatController {
 
     @PatchMapping("/dodaj/naprawe")
     public ResponseEntity<Naprawa> Dodaj_naprawe(@RequestBody NaprawaDto naprawaDto){
-        try {
-            Naprawa nowa_naprawa = warsztat_serwis.Dodanie_mechanika_do_naprawy(naprawaDto);
-            return ResponseEntity.ok(nowa_naprawa);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+        Naprawa nowa_naprawa = warsztat_serwis.Dodanie_mechanika_do_naprawy(naprawaDto);
+        return ResponseEntity.ok(nowa_naprawa);
     }
 
     @GetMapping("/pojazdy")
@@ -81,12 +77,8 @@ public class WarsztatController {
 
     @PostMapping("/dodaj/pojazd")
     public ResponseEntity<Pojazd> Dodaj_pojazd(@RequestBody PojazdKlientDto pojazdKlientDto){
-        try {
-            Pojazd nowy_pojazd = warsztat_serwis.Dodawanie_pojazdu(pojazdKlientDto.getPojazd(), pojazdKlientDto.getTelefonKlienta());
-            return ResponseEntity.status(HttpStatus.CREATED).body(nowy_pojazd);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+        Pojazd nowy_pojazd = warsztat_serwis.Dodawanie_pojazdu(pojazdKlientDto.getPojazd(), pojazdKlientDto.getTelefonKlienta());
+        return ResponseEntity.status(HttpStatus.CREATED).body(nowy_pojazd);
     }
 
     @PatchMapping("/modyfikuj/dane/pojazdow")
@@ -97,11 +89,7 @@ public class WarsztatController {
 
     @PostMapping("/dodaj/nowe/zgloszenie")
     public ResponseEntity<Naprawa> Nowe_zgloszenie(@RequestBody ZgloszenieDto zgloszenie) {
-        try {
-            Naprawa naprawa = warsztat_serwis.Dodanie_nowego_zgloszenia(zgloszenie.getKlient(), zgloszenie.getPojazd());
-            return ResponseEntity.status(HttpStatus.CREATED).body(naprawa);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
-        }
+        Naprawa naprawa = warsztat_serwis.Dodanie_nowego_zgloszenia(zgloszenie.getKlient(), zgloszenie.getPojazd());
+        return ResponseEntity.status(HttpStatus.CREATED).body(naprawa);
     }
 }

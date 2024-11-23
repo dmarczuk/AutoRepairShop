@@ -93,34 +93,25 @@ public class Warsztat_serwis {
         listaNapraw = naprawaRepository.findAll();
         return listaNapraw;
     }
-    public Naprawa Dodawanie_naprawy(Naprawa naprawa) throws SQLException {
-        try {
-            return naprawaRepository.save(naprawa);
-        } catch (Exception e) {
-            throw new SQLException("Nie udalo sie utworzyc naprawy");
-        }
+    public Naprawa Dodawanie_naprawy(Naprawa naprawa) {
+        return naprawaRepository.save(naprawa);
     }
 
-    public Naprawa Dodanie_mechanika_do_naprawy(NaprawaDto naprawaDto) throws SQLException {
+    public Naprawa Dodanie_mechanika_do_naprawy(NaprawaDto naprawaDto) {
         //Optional<Pojazd> pojazd = pojazdRepository.findByVin(naprawaDto.getPojazd().getVIN());
         Optional<Mechanik> mechanik = mechanikRepository.findByImieAndNazwisko(naprawaDto.getMechanik().getImie(), naprawaDto.getMechanik().getNazwisko());
-        try {
-            if (mechanik.isPresent()) {
-                Optional<Naprawa> naprawa = naprawaRepository.findById(naprawaDto.getNaprawaID());
-                naprawa.get().setMechanik(mechanik.get());
-                return naprawaRepository.save(naprawa.get());
-            } else {
-                throw new SQLException("Nie udalo sie utworzyc naprawy");
-            }
-        } catch (Exception e) {
-            throw new SQLException("Nie udalo sie dodac mechanika do naprawy");
+        if (mechanik.isEmpty()) {
+            throw new MechanikNotFoundError("Nie znalezniono mechanika z podanym imieniem i nazwiskiem");
         }
+        Optional<Naprawa> naprawa = naprawaRepository.findById(naprawaDto.getNaprawaID());
+        if (naprawa.isEmpty()) {
+            throw new NaprawaNotFoundError("Nie znaleziono podanej naprawy. Nie udało się dodać mechanika");
+        }
+        naprawa.get().setMechanik(mechanik.get());
+        return naprawaRepository.save(naprawa.get());
     }
     public List<Pojazd>Podglad_pojazdow(){
-
-        List<Pojazd> listaPojazdow = new ArrayList<>();
-        listaPojazdow = pojazdRepository.findAll();
-        return listaPojazdow;
+        return pojazdRepository.findAll();
     }
 
     @Transactional
@@ -150,18 +141,20 @@ public class Warsztat_serwis {
     }
 
     @Transactional
-    public Naprawa Dodanie_nowego_zgloszenia(Klient klient, Pojazd pojazd) throws SQLException {
+    public Naprawa Dodanie_nowego_zgloszenia(Klient klient, Pojazd pojazd) {
         //??? za pierwszym razem nie dziala - if nie wchodza??? debugowac trzeba
         Optional<Klient> klientInDatabase = klientRepository.findByTelefon(klient.getTelefon());
         Optional<Pojazd> pojazdInDatabase = pojazdRepository.findByVin(pojazd.getVIN());
-        if (klientInDatabase.isEmpty()) {
-            Dodawanie_klienta(klient);
-        }
+
+        Klient savedKlient = klientInDatabase.orElseGet(() -> Dodawanie_klienta(klient));
         Naprawa nowa_naprawa;
         if (pojazdInDatabase.isEmpty()) {
             Pojazd savedPojazd = Dodawanie_pojazdu(pojazd, klient.getTelefon());// Dodawanie_pojazdu(pojazd, klient);
             nowa_naprawa = new Naprawa(savedPojazd);
         } else {
+            if (pojazdInDatabase.get().getKlient().getTelefon().equals(savedKlient.getTelefon())) {
+                throw new KlientAlreadyExistError("Pojazd posiada już właściciela z innym numerem telefonu");
+            }
             nowa_naprawa = new Naprawa(pojazdInDatabase.get());
         }
 
