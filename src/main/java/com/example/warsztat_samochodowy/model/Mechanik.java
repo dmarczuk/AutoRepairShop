@@ -14,16 +14,21 @@ public class Mechanik {
     private String imie;
     @Column(nullable = false)
     private String nazwisko;
+
+    @Column(nullable = false)
+    private String czyZatrudniony;
     //private int naprawy;
 
     @OneToMany(mappedBy = "mechanik", cascade = CascadeType.ALL, orphanRemoval = true)
+    // co robi mappedBy, oraz orphanRemoval?
     //@JoinColumn(name = "klientID")
     private List<Naprawa> naprawy;
 
 
-    public Mechanik(String nazwisko, String imie) {
+    public Mechanik(String imie, String nazwisko) {
         this.nazwisko = nazwisko;
         this.imie = imie;
+        this.czyZatrudniony = "TAK";
     }
 
     public Mechanik() {
@@ -51,5 +56,13 @@ public class Mechanik {
 
     public void setNazwisko(String nazwisko) {
         this.nazwisko = nazwisko;
+    }
+
+    public String getCzyZatrudniony() {
+        return czyZatrudniony;
+    }
+
+    public void setCzyZatrudniony(String czyZatrudniony) {
+        this.czyZatrudniony = czyZatrudniony;
     }
 }

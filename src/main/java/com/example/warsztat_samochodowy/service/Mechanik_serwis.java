@@ -1,9 +1,12 @@
 package com.example.warsztat_samochodowy.service;
 
+import com.example.warsztat_samochodowy.error.MechanikNotFoundError;
+import com.example.warsztat_samochodowy.error.NaprawaNotFoundError;
 import com.example.warsztat_samochodowy.model.Klient;
 import com.example.warsztat_samochodowy.model.Mechanik;
 import com.example.warsztat_samochodowy.model.Naprawa;
 import com.example.warsztat_samochodowy.model.Pojazd;
+import com.example.warsztat_samochodowy.repository.MechanikRepository;
 import com.example.warsztat_samochodowy.repository.NaprawaRepository;
 import org.springframework.stereotype.Service;
 
@@ -18,66 +21,61 @@ import java.util.Optional;
 public class Mechanik_serwis {
 
     private NaprawaRepository naprawaRepository;
-    private Warsztat_serwis warsztat_serwis;
+    private MechanikRepository mechanikRepository;
 
-    public List<Naprawa> Podglad_napraw(){
-
-        List<Naprawa> listaNapraw = new ArrayList<>();
-        listaNapraw = naprawaRepository.findAll();
-        return listaNapraw;
+    public Mechanik_serwis(NaprawaRepository naprawaRepository, MechanikRepository mechanikRepository, Warsztat_serwis warsztat_serwis) {
+        this.naprawaRepository = naprawaRepository;
+        this.mechanikRepository = mechanikRepository;
     }
 
-    public Naprawa Przyjecie_zgloszenia(Naprawa naprawa, Mechanik mechanik) throws SQLException {
-
-        //warsztat_serwis.Dodawanie_klienta(klient);
-        //warsztat_serwis.Dodawanie_pojazdu(pojazd, klient.getTelefon());
-        //Naprawa nowa_naprawa = new Naprawa(pojazd, mechanik);
-        naprawa.setMechanik(mechanik);
-        naprawaRepository.save(naprawa);
+    public Naprawa Przyjecie_zgloszenia(Naprawa naprawa, Mechanik mechanik) {
+        Optional<Mechanik> mechanikWBazie = mechanikRepository.findByImieAndNazwisko(mechanik.getImie(), mechanik.getNazwisko());
+        Optional<Naprawa> naprawaWBazie = naprawaRepository.findByNaprawaID(naprawa.getNaprawaID());
+        if (mechanikWBazie.isEmpty()) {
+            throw new MechanikNotFoundError("Podany mechanik nie jest zatrudniony w warsztacie");
+        }
+        if (naprawaWBazie.isEmpty()) {
+            throw new NaprawaNotFoundError("Nie znalezniono podanej naprawy w bazie");
+        }
+        naprawaWBazie.get().setMechanik(mechanikWBazie.get());
+        naprawaRepository.save(naprawaWBazie.get());
         return naprawa;
 
     }
 
-    public Naprawa Modyfikacja_opisu_usterki(int NaprawaID, String opis_usterki, String stan, String protokol_naprawy){
-
-
-        Optional<Naprawa> staraNaprawa = naprawaRepository.findByNaprawaID(NaprawaID);
-
-        if(staraNaprawa.isPresent()){
-            //staryKlient.get().setKlientID(klient.getKlientID());
-            staraNaprawa.get().setOpis_usterki(opis_usterki);
-            staraNaprawa.get().setStan(stan);
-            staraNaprawa.get().setProtokol_naprawy(protokol_naprawy);
+    public Naprawa Modyfikacja_opisu_usterki(Naprawa naprawa){
+        Optional<Naprawa> naprawaWBazie = naprawaRepository.findByNaprawaID(naprawa.getNaprawaID());
+        if (naprawaWBazie.isEmpty()) {
+            throw new NaprawaNotFoundError("Nie znalezniono podanej naprawy w bazie");
         }
+        naprawaWBazie.get().setOpis_usterki(naprawa.getOpis_usterki());
+        naprawaWBazie.get().setStan(naprawa.getStan());
+        naprawaWBazie.get().setProtokol_naprawy(naprawa.getProtokol_naprawy());
 
-        naprawaRepository.save(staraNaprawa.get());
-        return staraNaprawa.get();
+        naprawaRepository.save(naprawaWBazie.get());
+        return naprawaWBazie.get();
     }
 
-    public Naprawa Rozpoczecie_naprawy(int NaprawaID, Date data_rozpoczecia){
-
-        Optional<Naprawa> staraNaprawa = naprawaRepository.findByNaprawaID(NaprawaID);
-
-        if(staraNaprawa.isPresent()){
-
-            staraNaprawa.get().setData_rozpoczecia(data_rozpoczecia);
+    public Naprawa Rozpoczecie_naprawy(Naprawa naprawa){
+        Optional<Naprawa> naprawaWBazie = naprawaRepository.findByNaprawaID(naprawa.getNaprawaID());
+        if (naprawaWBazie.isEmpty()) {
+            throw new NaprawaNotFoundError("Nie znalezniono podanej naprawy w bazie");
         }
+        naprawaWBazie.get().setData_rozpoczecia(naprawa.getData_rozpoczecia());
 
-        naprawaRepository.save(staraNaprawa.get());
-        return staraNaprawa.get();
+        naprawaRepository.save(naprawaWBazie.get());
+        return naprawaWBazie.get();
 
     }
 
-    public Naprawa Przewidywany_czas_naprawy(int NaprawaID, Date data_zakonczenia){
-
-        Optional<Naprawa> staraNaprawa = naprawaRepository.findByNaprawaID(NaprawaID);
-
-        if(staraNaprawa.isPresent()){
-
-            staraNaprawa.get().setData_rozpoczecia(data_zakonczenia);
+    public Naprawa Przewidywany_czas_naprawy(Naprawa naprawa){
+        Optional<Naprawa> naprawaWBazie = naprawaRepository.findByNaprawaID(naprawa.getNaprawaID());
+        if (naprawaWBazie.isEmpty()) {
+            throw new NaprawaNotFoundError("Nie znalezniono podanej naprawy w bazie");
         }
+        naprawaWBazie.get().setData_zakonczenia(naprawa.getData_zakonczenia());
 
-        naprawaRepository.save(staraNaprawa.get());
-        return staraNaprawa.get();
+        naprawaRepository.save(naprawaWBazie.get());
+        return naprawaWBazie.get();
     }
 }
