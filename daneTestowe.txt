@@ -1,6 +1,3 @@
-localhost:8080/klienci
-
-
 localhost:8080/dodaj/klienta
 
 {
@@ -10,15 +7,17 @@ localhost:8080/dodaj/klienta
     "email": "bozenakowalska@gmail.com"
 }
 
+localhost:8080/klienci
+
 localhost:8080/modyfikuj/dane/klienta
 {
-    "imie": "Adam",
-    "nazwisko": "Kowalski",
+    "imie": "Bozena",
+    "nazwisko": "Kowalska",
     "telefon": "753289111",
-    "email": "kowalski@gmail.com"
+    "email": "kowalska@gmail.com"
 }
 
-localhost:8080/pojazdy
+localhost:8080/klienci
 
 localhost:8080/dodaj/pojazd
 
@@ -33,6 +32,10 @@ localhost:8080/dodaj/pojazd
     "telefonKlienta": "753289111"
 }
 
+localhost:8080/pojazdy
+
+localhost:8080/klienci
+
 localhost:8080/modyfikuj/dane/pojazdow
 
 {
@@ -40,7 +43,25 @@ localhost:8080/modyfikuj/dane/pojazdow
      "marka": "Audi",
      "model": "S7",
      "rocznik": 2011,
-     "vin": "ABSDAE221293821283"
+     "vin": "ABSDAE221293821283"      !!!!!!!!!!!!!
+}
+
+localhost:8080/pojazdy
+
+localhost:8080/dodaj/mechanika
+
+{
+    "imie": "Zdzisław",
+    "nazwisko": "Przybylski"
+}
+
+localhost:8080/mechanicy
+
+localhost:8080/zwolnij/mechanika
+
+{
+    "imie": "Zdzisław",
+    "nazwisko": "Przybylski"
 }
 
 localhost:8080/mechanicy
@@ -52,14 +73,15 @@ localhost:8080/dodaj/mechanika
     "nazwisko": "Przybylski"
 }
 
-localhost:8080/usun/mechanika
+localhost:8080/dodaj/mechanika
 
 {
-    "imie": "Zdzisław",
+    "imie": "Michał",
     "nazwisko": "Przybylski"
 }
 
-localhost:8080/naprawy
+localhost:8080/mechanicy
+
 
 localhost:8080/dodaj/naprawe  // jesli brak naprawy to jakis komunikat trzeba
 np dana naprawa jeszcze nie istnieje
@@ -86,6 +108,8 @@ np dana naprawa jeszcze nie istnieje
     }
 }
 
+localhost:8080/naprawy
+
 localhost:8080/dodaj/nowe/zgloszenie
 // dla nieistniejacego klienta
 {
@@ -105,11 +129,11 @@ localhost:8080/dodaj/nowe/zgloszenie
 }
 // dla instniejacego klienta z pojazdem - OK
 {
-     "klient": {
-         "imie": "Adam",
-         "nazwisko": "Kowalski",
+     "klient": {  // jesli klient istnieje to wystarczy podac tylko telefon
+         "imie": "Bozena",
+         "nazwisko": "Kowalska",
          "telefon": "753289111",
-         "email": "kowalski@gmail.com"
+         "email": "kowalska@gmail.com"
      },
      "pojazd": {
          "rejestracja": "DW 20131",
@@ -119,6 +143,8 @@ localhost:8080/dodaj/nowe/zgloszenie
          "vin": "ABSDAE221293821283"
      }
 }
+
+localhost:8080/naprawy
 
 localhost:8080/dodaj/nowe_zgloszenie
 {
@@ -140,4 +166,42 @@ localhost:8080/dodaj/nowe_zgloszenie
         "nazwisko": "Przybylski"
     }
 }
+
+localhost:8080/przyjecie/naprawy
+{
+    "naprawa": {
+        "naprawaID": 1
+    },
+    "mechanik": {
+        "imie": "Zdzisław",
+        "nazwisko": "Przybylski"
+    }
+}
+
+localhost:8080/naprawy
+
+localhost:8080/modyfikuj/opis_usterki
+
+{
+   "naprawaID": 1,
+   "opis_usterki": "opis usterki",
+   "stan": "stan - rozpoczęty",
+   "protokol_naprawy": "protokol naprawy"
+}
+
+localhost:8080/modyfikuj/rozpoczecie_naprawy
+{
+    "naprawaID": 1,
+    "data_rozpoczecia": "2024-11-30"
+}
+
+localhost:8080/modyfikuj/zakonczenie_naprawy
+
+{
+    "naprawaID": 1,
+    "data_zakonczenia": "2024-12-12"
+}
+
+localhost:8080/naprawy
+
 
