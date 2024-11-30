@@ -69,23 +69,26 @@ public class Warsztat_serwis {
         return klientRepository.save(staryKlient.get());
     }
     public List<Mechanik>Podglad_mechanikow(){
-        List<Mechanik> listaMechanikow = new ArrayList<>();
+        List<Mechanik> listaMechanikow;
         listaMechanikow = mechanikRepository.findAll();
         return listaMechanikow;
     }
     public Mechanik Dodawanie_mechanika(Mechanik mechanik) {
+        Mechanik nowyMechanik = new Mechanik(mechanik.getImie(), mechanik.getNazwisko());
         Optional<Mechanik> existingMechanik = mechanikRepository.findByImieAndNazwisko(mechanik.getImie(), mechanik.getNazwisko());
         if (existingMechanik.isPresent()) {
             throw new MechanikAlreadyExistError("Mechanik z takim imieniem i nazwiskiem już istnieje w bazie");
         }
-        return mechanikRepository.save(mechanik);
+        return mechanikRepository.save(nowyMechanik);
     }
-    public void Usuniecie_danych_mechanika(Mechanik mechanik){
+    public void Zwolnienie_mechanika(Mechanik mechanik){
         Optional<Mechanik> mechanikZBazy = mechanikRepository.findByImieAndNazwisko(mechanik.getImie(), mechanik.getNazwisko());
-        if (mechanikZBazy.isEmpty()) {
-            throw new MechanikNotFoundError("Nie znalezniono mechanika z podanym imieniem i nazwiskiem");
+        if(mechanikZBazy.isPresent()){
+            mechanikZBazy.get().setCzyZatrudniony("NIE");
+            mechanikRepository.save(mechanikZBazy.get());
+        } else {
+            throw new MechanikNotFoundError("Mechanik nie istnieje w bazie");
         }
-        mechanikRepository.delete(mechanik);
     }
     public List<Naprawa>Podglad_napraw(){
 
@@ -127,7 +130,7 @@ public class Warsztat_serwis {
         pojazd.setKlient(klient.get());
         return pojazdRepository.save(pojazd);
     }
-    public void Modyfikacje_danych_pojazdu(Pojazd pojazd){
+    public Pojazd Modyfikacje_danych_pojazdu(Pojazd pojazd){
         Optional<Pojazd> staryPojazd = pojazdRepository.findByVin(pojazd.getVIN());
         if (staryPojazd.isEmpty()) {
             throw new PojazdNotFoundError("Pojazd z podanym numerem VIN nie istnieje w bazie");
@@ -137,7 +140,7 @@ public class Warsztat_serwis {
         staryPojazd.get().setModel(pojazd.getModel());
         staryPojazd.get().setRejestracja(pojazd.getRejestracja());
         staryPojazd.get().setRocznik(pojazd.getRocznik());
-        pojazdRepository.save(staryPojazd.get());
+        return pojazdRepository.save(staryPojazd.get());
     }
 
     @Transactional
@@ -152,7 +155,7 @@ public class Warsztat_serwis {
             Pojazd savedPojazd = Dodawanie_pojazdu(pojazd, klient.getTelefon());// Dodawanie_pojazdu(pojazd, klient);
             nowa_naprawa = new Naprawa(savedPojazd);
         } else {
-            if (pojazdInDatabase.get().getKlient().getTelefon().equals(savedKlient.getTelefon())) {
+            if (!pojazdInDatabase.get().getKlient().getTelefon().equals(savedKlient.getTelefon())) {
                 throw new KlientAlreadyExistError("Pojazd posiada już właściciela z innym numerem telefonu");
             }
             nowa_naprawa = new Naprawa(pojazdInDatabase.get());

@@ -51,9 +51,9 @@ public class WarsztatController {
         return ResponseEntity.ok(nowy_mechanik);
     }
 
-    @DeleteMapping("/usun/mechanika")
-    public ResponseEntity<Mechanik> Usun_mechanika(@RequestBody Mechanik mechanik){
-        warsztat_serwis.Usuniecie_danych_mechanika(mechanik);
+    @PatchMapping("/zwolnij/mechanika")
+    public ResponseEntity<Mechanik> Zwolnij_mechanika(@RequestBody Mechanik mechanik){
+        warsztat_serwis.Zwolnienie_mechanika(mechanik);
         return ResponseEntity.ok(mechanik);
     }
 
@@ -83,8 +83,8 @@ public class WarsztatController {
 
     @PatchMapping("/modyfikuj/dane/pojazdow")
     public ResponseEntity<Pojazd> Modyfikuj_pojazd(@RequestBody Pojazd pojazd){
-        warsztat_serwis.Modyfikacje_danych_pojazdu(pojazd);
-        return ResponseEntity.ok(pojazd);
+        Pojazd zmodyfikowanyPojazd = warsztat_serwis.Modyfikacje_danych_pojazdu(pojazd);
+        return ResponseEntity.ok(zmodyfikowanyPojazd);
     }
 
     @PostMapping("/dodaj/nowe/zgloszenie")
