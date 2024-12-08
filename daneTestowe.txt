@@ -43,7 +43,7 @@ localhost:8080/modyfikuj/dane/pojazdow
      "marka": "Audi",
      "model": "S7",
      "rocznik": 2011,
-     "vin": "ABSDAE221293821283"      !!!!!!!!!!!!!
+     "vin": "ABSDAE221293821283"
 }
 
 localhost:8080/pojazdy
@@ -52,7 +52,10 @@ localhost:8080/dodaj/mechanika
 
 {
     "imie": "Zdzisław",
-    "nazwisko": "Przybylski"
+    "nazwisko": "Przybylski",
+    "czyZatrudniony": true,
+    "login": "zdzislaw",
+    "haslo": "zdzislaw123"
 }
 
 localhost:8080/mechanicy
@@ -60,8 +63,7 @@ localhost:8080/mechanicy
 localhost:8080/zwolnij/mechanika
 
 {
-    "imie": "Zdzisław",
-    "nazwisko": "Przybylski"
+    "login": "zdzislaw"
 }
 
 localhost:8080/mechanicy
@@ -69,15 +71,11 @@ localhost:8080/mechanicy
 localhost:8080/dodaj/mechanika
 
 {
-    "imie": "Zdzisław",
-    "nazwisko": "Przybylski"
-}
-
-localhost:8080/dodaj/mechanika
-
-{
-    "imie": "Michał",
-    "nazwisko": "Przybylski"
+    "imie": "Michal",
+    "nazwisko": "Przybylski",
+    "czyZatrudniony": true,
+    "login": "michal",
+    "haslo": "michal123"
 }
 
 localhost:8080/mechanicy
@@ -192,14 +190,14 @@ localhost:8080/modyfikuj/opis_usterki
 localhost:8080/modyfikuj/rozpoczecie_naprawy
 {
     "naprawaID": 1,
-    "data_rozpoczecia": "2024-11-30"
+    "data_rozpoczecia": "2024-12-30"
 }
 
 localhost:8080/modyfikuj/zakonczenie_naprawy
 
 {
     "naprawaID": 1,
-    "data_zakonczenia": "2024-12-12"
+    "data_zakonczenia": "2025-01-12"
 }
 
 localhost:8080/naprawy
