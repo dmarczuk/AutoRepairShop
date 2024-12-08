@@ -24,7 +24,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig implements UserDetailsService{
 
-    private final MechanicRepository mechanikRepository;
+    private final MechanicRepository mechanicRepository;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {

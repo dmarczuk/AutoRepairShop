@@ -7,74 +7,66 @@ import com.example.warsztat_samochodowy.model.Mechanic;
 import com.example.warsztat_samochodowy.model.Repair;
 import com.example.warsztat_samochodowy.repository.MechanicRepository;
 import com.example.warsztat_samochodowy.repository.RepairRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 
-
+@AllArgsConstructor
 @Service
 public class MechanicService {
 
-    private RepairRepository naprawaRepository;
-    private MechanicRepository mechanikRepository;
+    private RepairRepository repairRepository;
+    private MechanicRepository mechanicRepository;
 
-    public MechanicService(RepairRepository naprawaRepository, MechanicRepository mechanikRepository, AutoRepairShopService warsztat_serwis) {
-        this.naprawaRepository = naprawaRepository;
-        this.mechanikRepository = mechanikRepository;
-    }
-
-    public Repair Przyjecie_zgloszenia(Repair naprawa, Mechanic mechanik) {
-        Optional<Mechanic> mechanikWBazie = mechanikRepository.findByImieAndNazwisko(mechanik.getFirstName(), mechanik.getSecondName());
-        Optional<Repair> naprawaWBazie = naprawaRepository.findByNaprawaID(naprawa.getRepairId());
-        if (mechanikWBazie.isEmpty()) {
-            throw new MechanicNotFoundException("Podany mechanik nie jest zatrudniony w warsztacie");
+    public Repair acceptTicket(Repair naprawa, Mechanic mechanik) {
+        Optional<Mechanic> mechanicInDatabase = mechanicRepository.findByFirstNameAndSecondName(mechanik.getFirstName(), mechanik.getSecondName());
+        Optional<Repair> repairInDatabase = repairRepository.findByRepairId(naprawa.getRepairId());
+        if (mechanicInDatabase.isEmpty()) {
+            throw new MechanicNotFoundException("Mechanic is not employed in car repair shop");
         }
-        if (naprawaWBazie.isEmpty()) {
-            throw new RepairNotFoundException("Nie znalezniono podanej naprawy w bazie");
+        if (repairInDatabase.isEmpty()) {
+            throw new RepairNotFoundException("The specified repair was not found in the database");
         }
-        naprawaWBazie.get().setMechanic(mechanikWBazie.get());
-        naprawaRepository.save(naprawaWBazie.get());
-        return naprawaWBazie.get();
+        repairInDatabase.get().setMechanic(mechanicInDatabase.get());
+        repairRepository.save(repairInDatabase.get());
+        return repairInDatabase.get();
 
     }
 
-    public Repair Modyfikacja_opisu_usterki(Repair naprawa){
-        Optional<Repair> naprawaWBazie = naprawaRepository.findByNaprawaID(naprawa.getRepairId());
-        if (naprawaWBazie.isEmpty()) {
-            throw new RepairNotFoundException("Nie znalezniono podanej naprawy w bazie");
+    public Repair modificationFaultDescription (Repair repair){
+        Optional<Repair> repairInDatabase = repairRepository.findByRepairId(repair.getRepairId());
+        if (repairInDatabase.isEmpty()) {
+            throw new RepairNotFoundException("The specified repair was not found in the database");
         }
-        naprawaWBazie.get().setDescription(naprawa.getDescription());
-        naprawaWBazie.get().setState(naprawa.getState());
-        naprawaWBazie.get().setRepairProtocol(naprawa.getRepairProtocol());
+        repairInDatabase.get().setDescription(repair.getDescription());
+        repairInDatabase.get().setState(repair.getState());
+        repairInDatabase.get().setRepairProtocol(repair.getRepairProtocol());
 
-        naprawaRepository.save(naprawaWBazie.get());
-        return naprawaWBazie.get();
+        repairRepository.save(repairInDatabase.get());
+        return repairInDatabase.get();
     }
 
-    public Repair Rozpoczecie_naprawy(Repair naprawa){
-        Optional<Repair> naprawaWBazie = naprawaRepository.findByNaprawaID(naprawa.getRepairId());
-        if (naprawaWBazie.isEmpty()) {
-            throw new RepairNotFoundException("Nie znalezniono podanej naprawy w bazie");
+    public Repair startRepair(Repair repair){
+        Optional<Repair> repairInDatabase = repairRepository.findByRepairId(repair.getRepairId());
+        if (repairInDatabase.isEmpty()) {
+            throw new RepairNotFoundException("The specified repair was not found in the database");
         }
-//        if (naprawa.getData_rozpoczecia().before(new Date())) {
-//            throw new IllegalArgumentException("Data rozpoczęcia nie może być w przeszłości");
-//        }
-        naprawaWBazie.get().setStartDate(naprawa.getStartDate());
-        naprawaRepository.save(naprawaWBazie.get());
-        return naprawaWBazie.get();
+        repairInDatabase.get().setStartDate(repair.getStartDate());
+        repairRepository.save(repairInDatabase.get());
+        return repairInDatabase.get();
 
     }
 
-    public Repair Przewidywany_czas_naprawy(Repair naprawa){
-        Optional<Repair> naprawaWBazie = naprawaRepository.findByNaprawaID(naprawa.getRepairId());
-        if (naprawaWBazie.isEmpty()) {
-            throw new RepairNotFoundException("Nie znalezniono podanej naprawy w bazie");
+    public Repair estimatedRepairTime(Repair repair){
+        Optional<Repair> repairInDatabase = repairRepository.findByRepairId(repair.getRepairId());
+        if (repairInDatabase.isEmpty()) {
+            throw new RepairNotFoundException("The specified repair was not found in the database");
         }
-        naprawaWBazie.get().setEndDate(naprawa.getEndDate());
-        if (naprawa.getEndDate().before(naprawaWBazie.get().getStartDate())) {
-            throw new EndDateBeforeDateStartsException("Data zakończenia nie może być wcześniejsza niż data rozpoczęcia");
+        repairInDatabase.get().setEndDate(repair.getEndDate());
+        if (repair.getEndDate().before(repairInDatabase.get().getStartDate())) {
+            throw new EndDateBeforeDateStartsException("The end date cannot be earlier than the start date");
         }
-        naprawaRepository.save(naprawaWBazie.get());
-        return naprawaWBazie.get();
+        repairRepository.save(repairInDatabase.get());
+        return repairInDatabase.get();
     }
 }

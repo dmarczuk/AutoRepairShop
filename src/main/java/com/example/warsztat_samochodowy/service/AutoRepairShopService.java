@@ -11,161 +11,132 @@ import com.example.warsztat_samochodowy.repository.ClientRepository;
 import com.example.warsztat_samochodowy.repository.MechanicRepository;
 import com.example.warsztat_samochodowy.repository.RepairRepository;
 import com.example.warsztat_samochodowy.repository.PojazdRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 
+@AllArgsConstructor
 @Service
 public class AutoRepairShopService {
 
-    private ClientRepository klientRepository;
-    private MechanicRepository mechanikRepository;
-    private RepairRepository naprawaRepository;
-    private PojazdRepository pojazdRepository;
-
+    private ClientRepository clientRepository;
+    private MechanicRepository mechanicRepository;
+    private RepairRepository repairRepository;
+    private PojazdRepository carRepository;
     private PasswordEncoder passwordEncoder;
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    public AutoRepairShopService(ClientRepository klientRepository,
-                                 MechanicRepository mechanikRepository,
-                                 RepairRepository naprawaRepository,
-                                 PojazdRepository pojazdRepository,
-                                 PasswordEncoder passwordEncoder) {
-        this.klientRepository = klientRepository;
-        this.mechanikRepository = mechanikRepository;
-        this.naprawaRepository = naprawaRepository;
-        this.pojazdRepository = pojazdRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    public List<Client>Podglad_klientow(){
-        List<Client> listaKlientow = new ArrayList<>();
-        listaKlientow = klientRepository.findAll();
-        return listaKlientow;
+    public List<Client> showClients(){
+        return clientRepository.findAll();
     }
     @Transactional
-    public Client Dodawanie_klienta(Client klient){
-        Optional<Client> existingKlient = klientRepository.findByTelefon(klient.getPhoneNumber());
-        if (existingKlient.isPresent()) {
-            throw new ClientAlreadyExistException("Klient z podanym numerem telefonu już istnieje w bazie");
+    public Client addClient(Client client) {
+        Optional<Client> clientInDatabase = clientRepository.findByPhoneNumber(client.getPhoneNumber());
+        if (clientInDatabase.isPresent()) {
+            throw new ClientAlreadyExistException("The client with the given phone number already exists in the database");
         }
-        return klientRepository.save(klient);
+        return clientRepository.save(client);
     }
-    public Client Modyfikacje_danych_klienta(UpdateClientRequest klient){
-        Optional<Client> staryKlient = klientRepository.findByTelefon(klient.getPhoneNumber());
-        if (staryKlient.isEmpty()) {
-            throw new ClientNotFoundException("Nie znaleziono klienta z podanym numerem telefonu");
+    public Client clientDataModification(UpdateClientRequest client){
+        Optional<Client> clientInDatabase = clientRepository.findByPhoneNumber(client.getPhoneNumber());
+        if (clientInDatabase.isEmpty()) {
+            throw new ClientNotFoundException("Client with the given phone number not found");
         }
-        staryKlient.get().setFirstName(klient.getFirstName());
-        staryKlient.get().setSecondName(klient.getSecondName());
-        staryKlient.get().setEmail(klient.getEmail());
-        return klientRepository.save(staryKlient.get());
+        clientInDatabase.get().setFirstName(client.getFirstName());
+        clientInDatabase.get().setSecondName(client.getSecondName());
+        clientInDatabase.get().setEmail(client.getEmail());
+        return clientRepository.save(clientInDatabase.get());
     }
-    public List<Mechanic>Podglad_mechanikow(){
-        List<Mechanic> listaMechanikow;
-        listaMechanikow = mechanikRepository.findAll();
-        return listaMechanikow;
+    public List<Mechanic> showMechanics(){
+        return mechanicRepository.findAll();
     }
-    public Mechanic Dodawanie_mechanika(Mechanic mechanik) {
-        String zahaszowaneHaslo = passwordEncoder.encode(mechanik.getPassword());
-        Mechanic nowyMechanik = new Mechanic(mechanik.getFirstName(), mechanik.getSecondName(), mechanik.getUsername(), zahaszowaneHaslo);
-        Optional<Mechanic> existingMechanik = mechanikRepository.findByLogin(mechanik.getUsername());
+    public Mechanic addMechanic(Mechanic mechanic) {
+        String hashedPassword = passwordEncoder.encode(mechanic.getPassword());
+        Mechanic newMechanic = new Mechanic(mechanic.getFirstName(), mechanic.getSecondName(), mechanic.getUsername(), hashedPassword);
+        Optional<Mechanic> existingMechanik = mechanicRepository.findByUsername(mechanic.getUsername());
         if (existingMechanik.isPresent()) {
-            throw new MechanicAlreadyExistException("Mechanik z takim loginem już istnieje w bazie");
+            throw new MechanicAlreadyExistException("A mechanic with this login already exists in the database");
         }
-        return mechanikRepository.save(nowyMechanik);
+        return mechanicRepository.save(newMechanic);
     }
-    public void Zwolnienie_mechanika(Mechanic mechanik){
-        Optional<Mechanic> mechanikZBazy = mechanikRepository.findByLogin(mechanik.getUsername());
-        if(mechanikZBazy.isPresent()){
-            mechanikZBazy.get().setIfEmployed("NIE");
-            mechanikRepository.save(mechanikZBazy.get());
+    public void fireMechanic(Mechanic mechanic){
+        Optional<Mechanic> mechanicInDatabase = mechanicRepository.findByUsername(mechanic.getUsername());
+        if(mechanicInDatabase.isPresent()){
+            mechanicInDatabase.get().setIfEmployed("NO");
+            mechanicRepository.save(mechanicInDatabase.get());
         } else {
-            throw new MechanicNotFoundException("Mechanik nie istnieje w bazie");
+            throw new MechanicNotFoundException("Mechanic with the given username not found");
         }
     }
-    public List<Repair>Podglad_napraw(){
-
-        List<Repair> listaNapraw = new ArrayList<>();
-        listaNapraw = naprawaRepository.findAll();
-        return listaNapraw;
+    public List<Repair> showRepairs(){
+        return repairRepository.findAll();
     }
-    public Repair Dodawanie_naprawy(Repair naprawa) {
-        return naprawaRepository.save(naprawa);
+    public Repair addRepair(Repair repair) {
+        return repairRepository.save(repair);
     }
 
-    public Repair Dodanie_mechanika_do_naprawy(RepairDto naprawaDto) {
-        //Optional<Pojazd> pojazd = pojazdRepository.findByVin(naprawaDto.getPojazd().getVIN());
-        Optional<Mechanic> mechanik = mechanikRepository.findByImieAndNazwisko(naprawaDto.getMechanic().getFirstName(), naprawaDto.getMechanic().getSecondName());
+    public Repair addMechanicToRepair(RepairDto repairDtoDto) {
+        Optional<Mechanic> mechanik = mechanicRepository.findByUsername(repairDtoDto.getMechanic().getUsername());
         if (mechanik.isEmpty()) {
-            throw new MechanicNotFoundException("Nie znalezniono mechanika z podanym imieniem i nazwiskiem");
+            throw new MechanicNotFoundException("Mechanic with the given username not found");
         }
-        Optional<Repair> naprawa = naprawaRepository.findById(naprawaDto.getNaprawaId());
-        if (naprawa.isEmpty()) {
-            throw new RepairNotFoundException("Nie znaleziono podanej naprawy. Nie udało się dodać mechanika");
+        Optional<Repair> repair = repairRepository.findById(repairDtoDto.getNaprawaId());
+        if (repair.isEmpty()) {
+            throw new RepairNotFoundException("Repair not found. Mechanic cannot be added");
         }
-        naprawa.get().setMechanic(mechanik.get());
-        return naprawaRepository.save(naprawa.get());
+        repair.get().setMechanic(mechanik.get());
+        return repairRepository.save(repair.get());
     }
-    public List<Car>Podglad_pojazdow(){
-        return pojazdRepository.findAll();
-    }
-
-    @Transactional
-    public Car Dodawanie_pojazdu(Car pojazd, String telefon) {
-        Optional<Client> klient = klientRepository.findByTelefon(telefon);
-        Optional<Car> existingPojazd = pojazdRepository.findByVin(pojazd.getVIN());
-        if (existingPojazd.isPresent()) {
-            throw new CarAlreadyExistException("Pojazd z podanym numerem VIN istnieje już w bazie");
-        }
-        if (klient.isEmpty()) {
-            throw new ClientNotFoundException("Klient z podanym telefonem nie istnieje w bazie");
-        }
-        pojazd.setClient(klient.get());
-        return pojazdRepository.save(pojazd);
-    }
-    public Car Modyfikacje_danych_pojazdu(Car pojazd){
-        Optional<Car> staryPojazd = pojazdRepository.findByVin(pojazd.getVIN());
-        if (staryPojazd.isEmpty()) {
-            throw new CarNotFoundException("Pojazd z podanym numerem VIN nie istnieje w bazie");
-        }
-        staryPojazd.get().setCarId(pojazd.getCarId());
-        staryPojazd.get().setMark(pojazd.getMark());
-        staryPojazd.get().setModel(pojazd.getModel());
-        staryPojazd.get().setVehicleRegistration(pojazd.getVehicleRegistration());
-        staryPojazd.get().setYear(pojazd.getYear());
-        return pojazdRepository.save(staryPojazd.get());
+    public List<Car> showCars(){
+        return carRepository.findAll();
     }
 
     @Transactional
-    public Repair Dodanie_nowego_zgloszenia(Client klient, Car pojazd) {
-        //??? za pierwszym razem nie dziala - if nie wchodza??? debugowac trzeba
-        Optional<Client> klientInDatabase = klientRepository.findByTelefon(klient.getPhoneNumber());
-        Optional<Car> pojazdInDatabase = pojazdRepository.findByVin(pojazd.getVIN());
+    public Car addCar(Car car, String phoneNumber) {
+        Optional<Client> client = clientRepository.findByPhoneNumber(phoneNumber);
+        Optional<Car> carInDatabase = carRepository.findByVin(car.getVin());
+        if (carInDatabase.isPresent()) {
+            throw new CarAlreadyExistException("Car with the given VIN already exists in the database");
+        }
+        if (client.isEmpty()) {
+            throw new ClientNotFoundException("Client with the given phone number not found");
+        }
+        car.setClient(client.get());
+        return carRepository.save(car);
+    }
+    public Car modificationCarData(Car car){
+        Optional<Car> carInDatabase = carRepository.findByVin(car.getVin());
+        if (carInDatabase.isEmpty()) {
+            throw new CarNotFoundException("Car with the given VIN not found");
+        }
+        carInDatabase.get().setCarId(car.getCarId());
+        carInDatabase.get().setMark(car.getMark());
+        carInDatabase.get().setModel(car.getModel());
+        carInDatabase.get().setVehicleRegistration(car.getVehicleRegistration());
+        carInDatabase.get().setYear(car.getYear());
+        return carRepository.save(carInDatabase.get());
+    }
 
-        Client savedKlient = klientInDatabase.orElseGet(() -> Dodawanie_klienta(klient));
-        Repair nowa_naprawa;
+    @Transactional
+    public Repair addNewTicket(Client client, Car car) {
+        Optional<Client> clientInDatabase = clientRepository.findByPhoneNumber(client.getPhoneNumber());
+        Optional<Car> pojazdInDatabase = carRepository.findByVin(car.getVin());
+
+        Client savedClient = clientInDatabase.orElseGet(() -> addClient(client));
+        Repair newRepair;
         if (pojazdInDatabase.isEmpty()) {
-            Car savedPojazd = Dodawanie_pojazdu(pojazd, klient.getPhoneNumber());// Dodawanie_pojazdu(pojazd, klient);
-            nowa_naprawa = new Repair(savedPojazd);
+            Car savedCar = addCar(car, client.getPhoneNumber());
+            newRepair = new Repair(savedCar);
         } else {
-            if (!pojazdInDatabase.get().getClient().getPhoneNumber().equals(savedKlient.getPhoneNumber())) {
-                throw new ClientAlreadyExistException("Pojazd posiada już właściciela z innym numerem telefonu");
+            if (!pojazdInDatabase.get().getClient().getPhoneNumber().equals(savedClient.getPhoneNumber())) {
+                throw new ClientAlreadyExistException("Car with the given VIN is already assigned to another client");
             }
-            nowa_naprawa = new Repair(pojazdInDatabase.get());
+            newRepair = new Repair(pojazdInDatabase.get());
         }
-
-        return Dodawanie_naprawy(nowa_naprawa);
-
+        return addRepair(newRepair);
     }
-
 }

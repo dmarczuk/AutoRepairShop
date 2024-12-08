@@ -23,25 +23,25 @@ public class AutoRepairShopController {
     }
     @GetMapping("/klienci")
     public List<Client> Wyswietl_klientow(){
-        List<Client> lista_klientow = warsztat_serwis.Podglad_klientow();
+        List<Client> lista_klientow = warsztat_serwis.showClients();
         return lista_klientow;
     }
 
     @PostMapping("/dodaj/klienta")
     public ResponseEntity<Client> Dodaj_klienta(@RequestBody Client klient){
-        Client nowy_klient = warsztat_serwis.Dodawanie_klienta(klient);
+        Client nowy_klient = warsztat_serwis.addClient(klient);
         return ResponseEntity.ok(nowy_klient);
     }
 
     @PatchMapping("/modyfikuj/dane/klienta")
     public ResponseEntity<Client> Modyfikuj_dane_klienta(@RequestBody UpdateClientRequest klientRequest){
-        Client klient = warsztat_serwis.Modyfikacje_danych_klienta(klientRequest);
+        Client klient = warsztat_serwis.clientDataModification(klientRequest);
         return ResponseEntity.ok(klient);
     }
 
     @GetMapping("/mechanicy")
     public List<Mechanic> Wyswietl_mechanikow(){
-        List<Mechanic> lista_mechanikow = warsztat_serwis.Podglad_mechanikow();
+        List<Mechanic> lista_mechanikow = warsztat_serwis.showMechanics();
         return lista_mechanikow;
     }
 
