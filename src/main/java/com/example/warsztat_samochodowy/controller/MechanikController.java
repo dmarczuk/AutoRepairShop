@@ -22,7 +22,7 @@ public class MechanikController {
         this.mechanik_serwis = mechanik_serwis;
     }
 
-    @PostMapping("/przyjecie/naprawy")
+    @PatchMapping("/przyjecie/naprawy")
     public ResponseEntity<Naprawa> PrzyjecieNaprawy (@RequestBody NaprawaMechanikDto naprawaMechanikDto){
         Naprawa przyjetaNaprawa = mechanik_serwis.Przyjecie_zgloszenia(naprawaMechanikDto.getNaprawa(), naprawaMechanikDto.getMechanik());
         return ResponseEntity.ok(przyjetaNaprawa);

@@ -1,7 +1,6 @@
 package com.example.warsztat_samochodowy.model;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,6 +15,11 @@ public class Mechanik {
     private String nazwisko;
 
     @Column(nullable = false)
+    private String login;
+    @Column(nullable = false)
+    private String haslo;
+
+    @Column(nullable = false)
     private String czyZatrudniony;
     //private int naprawy;
 
@@ -25,10 +29,12 @@ public class Mechanik {
     private List<Naprawa> naprawy;
 
 
-    public Mechanik(String imie, String nazwisko) {
+    public Mechanik(String imie, String nazwisko, String login, String haslo) {
         this.nazwisko = nazwisko;
         this.imie = imie;
         this.czyZatrudniony = "TAK";
+        this.login = login;
+        this.haslo = haslo;
     }
 
     public Mechanik() {
@@ -40,6 +46,22 @@ public class Mechanik {
 
     public void setMechanikID(int mechanikID) {
         this.mechanikID = mechanikID;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String username) {
+        this.login = username;
+    }
+
+    public String getHaslo() {
+        return haslo;
+    }
+
+    public void setHaslo(String password) {
+        this.haslo = password;
     }
 
     public String getImie() {

@@ -16,6 +16,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -32,17 +33,21 @@ public class Warsztat_serwis {
     private NaprawaRepository naprawaRepository;
     private PojazdRepository pojazdRepository;
 
+    private PasswordEncoder passwordEncoder;
+
     @PersistenceContext
     private EntityManager entityManager;
 
     public Warsztat_serwis(KlientRepository klientRepository,
                            MechanikRepository mechanikRepository,
                            NaprawaRepository naprawaRepository,
-                           PojazdRepository pojazdRepository) {
+                           PojazdRepository pojazdRepository,
+                           PasswordEncoder passwordEncoder) {
         this.klientRepository = klientRepository;
         this.mechanikRepository = mechanikRepository;
         this.naprawaRepository = naprawaRepository;
         this.pojazdRepository = pojazdRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<Klient>Podglad_klientow(){
@@ -74,15 +79,16 @@ public class Warsztat_serwis {
         return listaMechanikow;
     }
     public Mechanik Dodawanie_mechanika(Mechanik mechanik) {
-        Mechanik nowyMechanik = new Mechanik(mechanik.getImie(), mechanik.getNazwisko());
-        Optional<Mechanik> existingMechanik = mechanikRepository.findByImieAndNazwisko(mechanik.getImie(), mechanik.getNazwisko());
+        String zahaszowaneHaslo = passwordEncoder.encode(mechanik.getHaslo());
+        Mechanik nowyMechanik = new Mechanik(mechanik.getImie(), mechanik.getNazwisko(), mechanik.getLogin(), zahaszowaneHaslo);
+        Optional<Mechanik> existingMechanik = mechanikRepository.findByLogin(mechanik.getLogin());
         if (existingMechanik.isPresent()) {
-            throw new MechanikAlreadyExistError("Mechanik z takim imieniem i nazwiskiem już istnieje w bazie");
+            throw new MechanikAlreadyExistError("Mechanik z takim loginem już istnieje w bazie");
         }
         return mechanikRepository.save(nowyMechanik);
     }
     public void Zwolnienie_mechanika(Mechanik mechanik){
-        Optional<Mechanik> mechanikZBazy = mechanikRepository.findByImieAndNazwisko(mechanik.getImie(), mechanik.getNazwisko());
+        Optional<Mechanik> mechanikZBazy = mechanikRepository.findByLogin(mechanik.getLogin());
         if(mechanikZBazy.isPresent()){
             mechanikZBazy.get().setCzyZatrudniony("NIE");
             mechanikRepository.save(mechanikZBazy.get());
