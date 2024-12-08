@@ -77,7 +77,7 @@ public class AutoRepairShopController {
 
     @PostMapping("/dodaj/pojazd")
     public ResponseEntity<Car> Dodaj_pojazd(@RequestBody CarClientDto pojazdKlientDto){
-        Car nowy_pojazd = warsztat_serwis.Dodawanie_pojazdu(pojazdKlientDto.getPojazd(), pojazdKlientDto.getTelefonKlienta());
+        Car nowy_pojazd = warsztat_serwis.Dodawanie_pojazdu(pojazdKlientDto.getCar(), pojazdKlientDto.getPhoneNumber());
         return ResponseEntity.status(HttpStatus.CREATED).body(nowy_pojazd);
     }
 
@@ -89,7 +89,7 @@ public class AutoRepairShopController {
 
     @PostMapping("/dodaj/nowe/zgloszenie")
     public ResponseEntity<Repair> Nowe_zgloszenie(@RequestBody TicketDto zgloszenie) {
-        Repair naprawa = warsztat_serwis.Dodanie_nowego_zgloszenia(zgloszenie.getKlient(), zgloszenie.getPojazd());
+        Repair naprawa = warsztat_serwis.Dodanie_nowego_zgloszenia(zgloszenie.getClient(), zgloszenie.getCar());
         return ResponseEntity.status(HttpStatus.CREATED).body(naprawa);
     }
 }

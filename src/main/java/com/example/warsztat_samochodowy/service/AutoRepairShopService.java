@@ -61,12 +61,12 @@ public class AutoRepairShopService {
         return klientRepository.save(klient);
     }
     public Client Modyfikacje_danych_klienta(UpdateClientRequest klient){
-        Optional<Client> staryKlient = klientRepository.findByTelefon(klient.getTelefon());
+        Optional<Client> staryKlient = klientRepository.findByTelefon(klient.getPhoneNumber());
         if (staryKlient.isEmpty()) {
             throw new ClientNotFoundException("Nie znaleziono klienta z podanym numerem telefonu");
         }
-        staryKlient.get().setImie(klient.getImie());
-        staryKlient.get().setNazwisko(klient.getNazwisko());
+        staryKlient.get().setImie(klient.getFirstName());
+        staryKlient.get().setNazwisko(klient.getSecondName());
         staryKlient.get().setEmail(klient.getEmail());
         return klientRepository.save(staryKlient.get());
     }
@@ -105,11 +105,11 @@ public class AutoRepairShopService {
 
     public Repair Dodanie_mechanika_do_naprawy(RepairDto naprawaDto) {
         //Optional<Pojazd> pojazd = pojazdRepository.findByVin(naprawaDto.getPojazd().getVIN());
-        Optional<Mechanic> mechanik = mechanikRepository.findByImieAndNazwisko(naprawaDto.getMechanik().getImie(), naprawaDto.getMechanik().getNazwisko());
+        Optional<Mechanic> mechanik = mechanikRepository.findByImieAndNazwisko(naprawaDto.getMechanic().getImie(), naprawaDto.getMechanic().getNazwisko());
         if (mechanik.isEmpty()) {
             throw new MechanicNotFoundException("Nie znalezniono mechanika z podanym imieniem i nazwiskiem");
         }
-        Optional<Repair> naprawa = naprawaRepository.findById(naprawaDto.getNaprawaID());
+        Optional<Repair> naprawa = naprawaRepository.findById(naprawaDto.getNaprawaId());
         if (naprawa.isEmpty()) {
             throw new RepairNotFoundException("Nie znaleziono podanej naprawy. Nie udało się dodać mechanika");
         }

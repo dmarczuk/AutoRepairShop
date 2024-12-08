@@ -1,33 +1,33 @@
 package com.example.warsztat_samochodowy.dto;
 
 public class UpdateClientRequest {
-    private String imie;
-    private String nazwisko;
-    private String telefon;
+    private String firstName;
+    private String secondName;
+    private String phoneNumber;
     private String email;
 
-    public String getImie() {
-        return imie;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setImie(String imie) {
-        this.imie = imie;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getNazwisko() {
-        return nazwisko;
+    public String getSecondName() {
+        return secondName;
     }
 
-    public void setNazwisko(String nazwisko) {
-        this.nazwisko = nazwisko;
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
     }
 
-    public String getTelefon() {
-        return telefon;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setTelefon(String telefon) {
-        this.telefon = telefon;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getEmail() {

@@ -4,22 +4,22 @@ import com.example.warsztat_samochodowy.model.Client;
 import com.example.warsztat_samochodowy.model.Car;
 
 public class TicketDto {
-    private Client klient;
-    private Car pojazd;
+    private Client client;
+    private Car car;
 
-    public Client getKlient() {
-        return klient;
+    public Client getClient() {
+        return client;
     }
 
-    public void setKlient(Client klient) {
-        this.klient = klient;
+    public void setClient(Client client) {
+        this.client = client;
     }
 
-    public Car getPojazd() {
-        return pojazd;
+    public Car getCar() {
+        return car;
     }
 
-    public void setPojazd(Car pojazd) {
-        this.pojazd = pojazd;
+    public void setCar(Car car) {
+        this.car = car;
     }
 }

@@ -1,13 +1,13 @@
 package com.example.warsztat_samochodowy.dto;
 
 public class CarDto {
-    private String VIN;
+    private String Vin;
 
-    public String getVIN() {
-        return VIN;
+    public String getVin() {
+        return Vin;
     }
 
-    public void setVIN(String VIN) {
-        this.VIN = VIN;
+    public void setVin(String vin) {
+        this.Vin = vin;
     }
 }

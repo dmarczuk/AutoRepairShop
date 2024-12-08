@@ -3,32 +3,32 @@ package com.example.warsztat_samochodowy.dto;
 import com.example.warsztat_samochodowy.model.Mechanic;
 
 public class RepairDto {
-    private int naprawaID;
-    private Mechanic mechanik;
+    private int naprawaId;
+    private Mechanic mechanic;
 
 
-    public RepairDto(int naprawaID) {
-        this.naprawaID = naprawaID;
+    public RepairDto(int naprawaId) {
+        this.naprawaId = naprawaId;
     }
 
-    public RepairDto(int naprawaID, Mechanic mechanik) {
-        this.naprawaID = naprawaID;
-        this.mechanik = mechanik;
+    public RepairDto(int naprawaId, Mechanic mechanic) {
+        this.naprawaId = naprawaId;
+        this.mechanic = mechanic;
     }
 
-    public int getNaprawaID() {
-        return naprawaID;
+    public int getNaprawaId() {
+        return naprawaId;
     }
 
-    public void setNaprawaID(int naprawaID) {
-        this.naprawaID = naprawaID;
+    public void setNaprawaId(int naprawaId) {
+        this.naprawaId = naprawaId;
     }
 
-    public Mechanic getMechanik() {
-        return mechanik;
+    public Mechanic getMechanic() {
+        return mechanic;
     }
 
-    public void setMechanik(Mechanic mechanik) {
-        this.mechanik = mechanik;
+    public void setMechanic(Mechanic mechanic) {
+        this.mechanic = mechanic;
     }
 }

@@ -3,14 +3,14 @@ package com.example.warsztat_samochodowy.dto;
 import com.example.warsztat_samochodowy.model.Car;
 
 public class CarClientDto {
-    private Car pojazd;
-    private String telefonKlienta;
+    private Car car;
+    private String phoneNumber;
 
-    public Car getPojazd() {
-        return pojazd;
+    public Car getCar() {
+        return car;
     }
 
-    public String getTelefonKlienta() {
-        return telefonKlienta;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 }
