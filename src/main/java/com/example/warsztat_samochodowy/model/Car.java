@@ -1,17 +1,13 @@
 package com.example.warsztat_samochodowy.model;
-import ch.qos.logback.core.net.server.Client;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "Pojazdy")
-public class Pojazd {
+public class Car {
 
     //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private String pojazdID = UUID.randomUUID().toString();
@@ -32,17 +28,17 @@ public class Pojazd {
     @ManyToOne
     @JoinColumn(name = "klientid")
     @JsonBackReference
-    private Klient klient;
+    private Client klient;
     //private int klientID;
 
     @OneToMany(cascade = CascadeType.ALL)
     //@OneToMany(mappedBy = "pojazd", cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "vin")
-    private List<Naprawa> naprawy;
+    private List<Repair> naprawy;
 
 
 
-    public Pojazd(String rejestracja, String marka, String model, int rocznik, String vin) {
+    public Car(String rejestracja, String marka, String model, int rocznik, String vin) {
         this.rejestracja = rejestracja;
         this.marka = marka;
         this.model = model;
@@ -50,14 +46,14 @@ public class Pojazd {
         this.vin = vin;
     }
 
-    public Pojazd() {
+    public Car() {
     }
 
-    public Klient getKlient() {
+    public Client getKlient() {
         return klient;
     }
 
-    public void setKlient(Klient klient) {
+    public void setKlient(Client klient) {
         this.klient = klient;
     }
 

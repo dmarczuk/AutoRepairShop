@@ -1,8 +1,6 @@
 package com.example.warsztat_samochodowy.dto;
 
-import org.hibernate.sql.ast.SqlTreeCreationException;
-
-public class PojazdDto {
+public class CarDto {
     private String VIN;
 
     public String getVIN() {

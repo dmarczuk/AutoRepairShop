@@ -5,7 +5,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "Mechanicy")
-public class Mechanik {
+public class Mechanic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int mechanikID;
@@ -26,10 +26,10 @@ public class Mechanik {
     @OneToMany(mappedBy = "mechanik", cascade = CascadeType.ALL, orphanRemoval = true)
     // co robi mappedBy, oraz orphanRemoval?
     //@JoinColumn(name = "klientID")
-    private List<Naprawa> naprawy;
+    private List<Repair> naprawy;
 
 
-    public Mechanik(String imie, String nazwisko, String login, String haslo) {
+    public Mechanic(String imie, String nazwisko, String login, String haslo) {
         this.nazwisko = nazwisko;
         this.imie = imie;
         this.czyZatrudniony = "TAK";
@@ -37,7 +37,7 @@ public class Mechanik {
         this.haslo = haslo;
     }
 
-    public Mechanik() {
+    public Mechanic() {
     }
 
     public int getMechanikID() {

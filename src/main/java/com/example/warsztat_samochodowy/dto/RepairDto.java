@@ -1,17 +1,17 @@
 package com.example.warsztat_samochodowy.dto;
 
-import com.example.warsztat_samochodowy.model.Mechanik;
+import com.example.warsztat_samochodowy.model.Mechanic;
 
-public class NaprawaDto {
+public class RepairDto {
     private int naprawaID;
-    private Mechanik mechanik;
+    private Mechanic mechanik;
 
 
-    public NaprawaDto(int naprawaID) {
+    public RepairDto(int naprawaID) {
         this.naprawaID = naprawaID;
     }
 
-    public NaprawaDto(int naprawaID, Mechanik mechanik) {
+    public RepairDto(int naprawaID, Mechanic mechanik) {
         this.naprawaID = naprawaID;
         this.mechanik = mechanik;
     }
@@ -24,11 +24,11 @@ public class NaprawaDto {
         this.naprawaID = naprawaID;
     }
 
-    public Mechanik getMechanik() {
+    public Mechanic getMechanik() {
         return mechanik;
     }
 
-    public void setMechanik(Mechanik mechanik) {
+    public void setMechanik(Mechanic mechanik) {
         this.mechanik = mechanik;
     }
 }

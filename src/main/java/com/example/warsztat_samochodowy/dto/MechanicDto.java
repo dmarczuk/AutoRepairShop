@@ -1,6 +1,6 @@
 package com.example.warsztat_samochodowy.dto;
 
-public class MechanikDto {
+public class MechanicDto {
     private String imie;
     private String nazwisko;
 

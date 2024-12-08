@@ -1,8 +1,6 @@
 package com.example.warsztat_samochodowy.dto;
 
-import jakarta.persistence.Column;
-
-public class UpdateKlientRequest {
+public class UpdateClientRequest {
     private String imie;
     private String nazwisko;
     private String telefon;

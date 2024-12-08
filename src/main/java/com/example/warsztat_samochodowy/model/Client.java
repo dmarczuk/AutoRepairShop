@@ -1,6 +1,5 @@
 package com.example.warsztat_samochodowy.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -11,7 +10,7 @@ import java.util.List;
 @Entity
 @Table(name = "Klienci")
 
-public class Klient {
+public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     //@Column(name = "klient_id")
@@ -30,23 +29,23 @@ public class Klient {
     //@OneToMany(mappedBy = "klient", cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "klientID")
     @JsonManagedReference
-    private List<Pojazd> pojazdy = new ArrayList<>();
+    private List<Car> pojazdy = new ArrayList<>();
 
-    public Klient(String imie, String nazwisko, String telefon, String email, List<Pojazd> pojazdy) {
+    public Client(String imie, String nazwisko, String telefon, String email, List<Car> pojazdy) {
         this.imie = imie;
         this.nazwisko = nazwisko;
         this.telefon = telefon;
         this.email = email;
     }
 
-    public Klient() {
+    public Client() {
     }
 
-    public List<Pojazd> getPojazdy() {
+    public List<Car> getPojazdy() {
         return pojazdy;
     }
 
-    public void setPojazdy(List<Pojazd> pojazdy) {
+    public void setPojazdy(List<Car> pojazdy) {
         this.pojazdy = pojazdy;
     }
 

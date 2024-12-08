@@ -1,9 +1,8 @@
 package com.example.warsztat_samochodowy.security;
 
-import com.example.warsztat_samochodowy.error.MechanikNotFoundError;
-import com.example.warsztat_samochodowy.model.Mechanik;
-import com.example.warsztat_samochodowy.repository.MechanikRepository;
-import com.example.warsztat_samochodowy.service.Mechanik_serwis;
+import com.example.warsztat_samochodowy.error.MechanicNotFoundException;
+import com.example.warsztat_samochodowy.model.Mechanic;
+import com.example.warsztat_samochodowy.repository.MechanicRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,25 +12,19 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @AllArgsConstructor
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig implements UserDetailsService{
 
-    private final MechanikRepository mechanikRepository;
+    private final MechanicRepository mechanikRepository;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -62,7 +55,7 @@ public class SecurityConfig implements UserDetailsService{
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws MechanikNotFoundError {
+    public UserDetails loadUserByUsername(String username) throws MechanicNotFoundException {
         if ("admin".equals(username)) {
             //List<GrantedAuthority> adminAuthorities = new ArrayList<>();
             //adminAuthorities.add(new SimpleGrantedAuthority("ADMIN"));
@@ -72,8 +65,8 @@ public class SecurityConfig implements UserDetailsService{
                     .roles("ADMIN")
                     .build();
         }
-        Mechanik mechanik = mechanikRepository.findByLogin(username)
-                .orElseThrow(() -> new MechanikNotFoundError("Mechanik z podana nazwa użytkownika nie istnieje"));
+        Mechanic mechanik = mechanikRepository.findByLogin(username)
+                .orElseThrow(() -> new MechanicNotFoundException("Mechanik z podana nazwa użytkownika nie istnieje"));
         //List<GrantedAuthority> authorities = new ArrayList<>();
         //authorities.add(new SimpleGrantedAuthority("ROLE_MECHANIC"));
         return User.builder()

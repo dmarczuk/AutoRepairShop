@@ -4,7 +4,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "Naprawy")
-public class Naprawa {
+public class Repair {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,22 +16,22 @@ public class Naprawa {
     private String protokol_naprawy;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "mechanikID")
-    private Mechanik mechanik;
+    private Mechanic mechanik;
     //private int VIN; // klucz obcy
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "vin")
-    private Pojazd pojazd; // klucz obcy
+    private Car pojazd; // klucz obcy
 
-    public Naprawa(Pojazd pojazd, Mechanik mechanik) {
+    public Repair(Car pojazd, Mechanic mechanik) {
         this.pojazd = pojazd;
         this.mechanik = mechanik;
     }
 
-    public Naprawa(Pojazd pojazd) {
+    public Repair(Car pojazd) {
         this.pojazd = pojazd;
     }
 
-    public Naprawa() {
+    public Repair() {
 
     }
 
@@ -59,11 +59,11 @@ public class Naprawa {
         return protokol_naprawy;
     }
 
-    public Mechanik getMechanik() {
+    public Mechanic getMechanik() {
         return mechanik;
     }
 
-    public Pojazd getPojazd() {
+    public Car getPojazd() {
         return pojazd;
     }
 
@@ -91,11 +91,11 @@ public class Naprawa {
         this.protokol_naprawy = protokol_naprawy;
     }
 
-    public void setVIN(Pojazd pojazd) {
+    public void setVIN(Car pojazd) {
         this.pojazd = pojazd;
     }
 
-    public void setMechanik(Mechanik mechanik) {
+    public void setMechanik(Mechanic mechanik) {
         this.mechanik = mechanik;
     }
 }

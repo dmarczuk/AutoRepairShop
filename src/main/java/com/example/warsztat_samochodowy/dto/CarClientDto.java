@@ -1,12 +1,12 @@
 package com.example.warsztat_samochodowy.dto;
 
-import com.example.warsztat_samochodowy.model.Pojazd;
+import com.example.warsztat_samochodowy.model.Car;
 
-public class PojazdKlientDto {
-    private Pojazd pojazd;
+public class CarClientDto {
+    private Car pojazd;
     private String telefonKlienta;
 
-    public Pojazd getPojazd() {
+    public Car getPojazd() {
         return pojazd;
     }
 

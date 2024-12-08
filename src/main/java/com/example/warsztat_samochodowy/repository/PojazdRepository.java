@@ -1,15 +1,14 @@
 package com.example.warsztat_samochodowy.repository;
 
-import com.example.warsztat_samochodowy.model.Pojazd;
+import com.example.warsztat_samochodowy.model.Car;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PojazdRepository extends JpaRepository<Pojazd, String> {
+public interface PojazdRepository extends JpaRepository<Car, String> {
 
 
-    Optional<Pojazd> findByVin(String vin);
+    Optional<Car> findByVin(String vin);
 }
