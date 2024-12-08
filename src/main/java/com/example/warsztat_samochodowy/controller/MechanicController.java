@@ -3,40 +3,37 @@ package com.example.warsztat_samochodowy.controller;
 import com.example.warsztat_samochodowy.dto.RepairMechanicDto;
 import com.example.warsztat_samochodowy.model.Repair;
 import com.example.warsztat_samochodowy.service.MechanicService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+@AllArgsConstructor
 @RestController
 public class MechanicController {
 
-    private final MechanicService mechanik_serwis;
+    private final MechanicService mechanicService;
 
-    public MechanicController(MechanicService mechanik_serwis) {
-        this.mechanik_serwis = mechanik_serwis;
+    @PatchMapping("/accept/repair")
+    public ResponseEntity<Repair> acceptTicket (@RequestBody RepairMechanicDto repairMechanicDto){
+        Repair acceptedTicket = mechanicService.acceptTicket(repairMechanicDto.getRepair(), repairMechanicDto.getMechanic());
+        return ResponseEntity.ok(acceptedTicket);
     }
 
-    @PatchMapping("/przyjecie/naprawy")
-    public ResponseEntity<Repair> PrzyjecieNaprawy (@RequestBody RepairMechanicDto naprawaMechanikDto){
-        Repair przyjetaNaprawa = mechanik_serwis.acceptTicket(naprawaMechanikDto.getRepair(), naprawaMechanikDto.getMechanic());
-        return ResponseEntity.ok(przyjetaNaprawa);
+    @PatchMapping("/modify/description")
+    public ResponseEntity<Repair> modificationFaultDescription(@RequestBody Repair repair){
+        Repair newRepair = mechanicService.modificationFaultDescription(repair);
+        return ResponseEntity.ok(newRepair);
     }
 
-    @PatchMapping("/modyfikuj/opis_usterki")
-    public ResponseEntity<Repair> Modyfikacja_opisu_usterki(@RequestBody Repair naprawa){
-        Repair nowaNaprawa = mechanik_serwis.modificationFaultDescription(naprawa);
-        return ResponseEntity.ok(nowaNaprawa);
+    @PatchMapping("/modify/repairStartDate")
+    public ResponseEntity<Repair> startRepair(@RequestBody Repair repair){
+        Repair newRepair = mechanicService.startRepair(repair);
+        return ResponseEntity.ok(newRepair);
     }
 
-    @PatchMapping("/modyfikuj/rozpoczecie_naprawy")
-    public ResponseEntity<Repair> Rozpoczecie_naprawy(@RequestBody Repair naprawa){
-        Repair nowaNaprawa = mechanik_serwis.Rozpoczecie_naprawy(naprawa);
-        return ResponseEntity.ok(nowaNaprawa);
-    }
-
-    @PatchMapping("/modyfikuj/zakonczenie_naprawy")
-    public ResponseEntity<Repair> Zakonczenie_naprawy(@RequestBody Repair naprawa){
-        Repair nowaNaprawa = mechanik_serwis.estimatedRepairTime(naprawa);
-        return ResponseEntity.ok(nowaNaprawa);
+    @PatchMapping("/modify/repairEndDate")
+    public ResponseEntity<Repair> endDate(@RequestBody Repair repair){
+        Repair newRepair = mechanicService.estimatedRepairTime(repair);
+        return ResponseEntity.ok(newRepair);
     }
 
 

@@ -1,95 +1,89 @@
 package com.example.warsztat_samochodowy.controller;
 
-
 import com.example.warsztat_samochodowy.dto.RepairDto;
 import com.example.warsztat_samochodowy.dto.CarClientDto;
 import com.example.warsztat_samochodowy.dto.UpdateClientRequest;
 import com.example.warsztat_samochodowy.dto.TicketDto;
 import com.example.warsztat_samochodowy.model.*;
 import com.example.warsztat_samochodowy.service.AutoRepairShopService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@AllArgsConstructor
 @RestController
 public class AutoRepairShopController {
 
-    private final AutoRepairShopService warsztat_serwis;
+    private final AutoRepairShopService autoRepairShopService;
 
-    public AutoRepairShopController(AutoRepairShopService warsztat_serwis) {
-        this.warsztat_serwis = warsztat_serwis;
-    }
-    @GetMapping("/klienci")
-    public List<Client> Wyswietl_klientow(){
-        List<Client> lista_klientow = warsztat_serwis.showClients();
-        return lista_klientow;
+    @GetMapping("/clients")
+    public List<Client> showClients(){
+        return autoRepairShopService.showClients();
     }
 
-    @PostMapping("/dodaj/klienta")
-    public ResponseEntity<Client> Dodaj_klienta(@RequestBody Client klient){
-        Client nowy_klient = warsztat_serwis.addClient(klient);
-        return ResponseEntity.ok(nowy_klient);
+    @PostMapping("/add/client")
+    public ResponseEntity<Client> addClient(@RequestBody Client client){
+        Client newCLient = autoRepairShopService.addClient(client);
+        return ResponseEntity.ok(newCLient);
     }
 
-    @PatchMapping("/modyfikuj/dane/klienta")
-    public ResponseEntity<Client> Modyfikuj_dane_klienta(@RequestBody UpdateClientRequest klientRequest){
-        Client klient = warsztat_serwis.clientDataModification(klientRequest);
-        return ResponseEntity.ok(klient);
+    @PatchMapping("/modify/client")
+    public ResponseEntity<Client> modifyClientData(@RequestBody UpdateClientRequest clientRequest){
+        Client client = autoRepairShopService.clientDataModification(clientRequest);
+        return ResponseEntity.ok(client);
     }
 
-    @GetMapping("/mechanicy")
-    public List<Mechanic> Wyswietl_mechanikow(){
-        List<Mechanic> lista_mechanikow = warsztat_serwis.showMechanics();
-        return lista_mechanikow;
+    @GetMapping("/mechanics")
+    public List<Mechanic> showMechanics(){
+        return autoRepairShopService.showMechanics();
     }
 
-    @PostMapping("/dodaj/mechanika")
-    public ResponseEntity<Mechanic> Dodaj_mechanika(@RequestBody Mechanic mechanik){
-        Mechanic nowy_mechanik = warsztat_serwis.Dodawanie_mechanika(mechanik);
-        return ResponseEntity.ok(nowy_mechanik);
+    @PostMapping("/add/mechanic")
+    public ResponseEntity<Mechanic> addMechanic(@RequestBody Mechanic mechanic){
+        Mechanic newMechanic = autoRepairShopService.addMechanic(mechanic);
+        return ResponseEntity.ok(newMechanic);
     }
 
-    @PatchMapping("/zwolnij/mechanika")
-    public ResponseEntity<Mechanic> Zwolnij_mechanika(@RequestBody Mechanic mechanik){
-        warsztat_serwis.Zwolnienie_mechanika(mechanik);
-        return ResponseEntity.ok(mechanik);
+    @PatchMapping("/fire/mechanic")
+    public ResponseEntity<Mechanic> fireMechanic(@RequestBody Mechanic mechanic){
+        autoRepairShopService.fireMechanic(mechanic);
+        return ResponseEntity.ok(mechanic);
     }
 
-    @GetMapping("/naprawy")
-    public List<Repair> Wyswietl_naprawy(){
-        List<Repair> lista_napraw = warsztat_serwis.Podglad_napraw();
-        return lista_napraw;
+    @GetMapping("/repairs")
+    public List<Repair> showRepairs(){
+        return autoRepairShopService.showRepairs();
     }
 
-    @PatchMapping("/dodaj/naprawe")
-    public ResponseEntity<Repair> Dodaj_naprawe(@RequestBody RepairDto naprawaDto){
-        Repair nowa_naprawa = warsztat_serwis.Dodanie_mechanika_do_naprawy(naprawaDto);
-        return ResponseEntity.ok(nowa_naprawa);
+    @PatchMapping("/add/repair")
+    public ResponseEntity<Repair> addRepair(@RequestBody RepairDto repairDtoDto){
+        Repair newRepair = autoRepairShopService.addMechanicToRepair(repairDtoDto);
+        return ResponseEntity.ok(newRepair);
     }
 
-    @GetMapping("/pojazdy")
-    public List<Car> Wyswietl_pojazd(){
-        List<Car> lista_pojazdow = warsztat_serwis.Podglad_pojazdow();
-        return lista_pojazdow;
+    @GetMapping("/cars")
+    public List<Car> showCars(){
+        return autoRepairShopService.showCars();
     }
 
-    @PostMapping("/dodaj/pojazd")
-    public ResponseEntity<Car> Dodaj_pojazd(@RequestBody CarClientDto pojazdKlientDto){
-        Car nowy_pojazd = warsztat_serwis.Dodawanie_pojazdu(pojazdKlientDto.getCar(), pojazdKlientDto.getPhoneNumber());
-        return ResponseEntity.status(HttpStatus.CREATED).body(nowy_pojazd);
+    @PostMapping("/add/car")
+    public ResponseEntity<Car> addCar(@RequestBody CarClientDto carClientDtoDto){
+        Car newCar = autoRepairShopService.addCar(carClientDtoDto.getCar(), carClientDtoDto.getPhoneNumber());
+        return ResponseEntity.status(HttpStatus.CREATED).body(newCar);
     }
 
-    @PatchMapping("/modyfikuj/dane/pojazdow")
-    public ResponseEntity<Car> Modyfikuj_pojazd(@RequestBody Car pojazd){
-        Car zmodyfikowanyPojazd = warsztat_serwis.Modyfikacje_danych_pojazdu(pojazd);
-        return ResponseEntity.ok(zmodyfikowanyPojazd);
+    @PatchMapping("/modify/car")
+    public ResponseEntity<Car> modifyCarData(@RequestBody Car car){
+        Car modifiedCar = autoRepairShopService.modificationCarData(car);
+        return ResponseEntity.ok(modifiedCar);
     }
 
-    @PostMapping("/dodaj/nowe/zgloszenie")
-    public ResponseEntity<Repair> Nowe_zgloszenie(@RequestBody TicketDto zgloszenie) {
-        Repair naprawa = warsztat_serwis.Dodanie_nowego_zgloszenia(zgloszenie.getClient(), zgloszenie.getCar());
-        return ResponseEntity.status(HttpStatus.CREATED).body(naprawa);
+    @PostMapping("/add/new/ticket")
+    public ResponseEntity<Repair> newTicket(@RequestBody TicketDto ticket) {
+        Repair repair = autoRepairShopService.addNewTicket(ticket.getClient(), ticket.getCar());
+        return ResponseEntity.status(HttpStatus.CREATED).body(repair);
     }
 }
