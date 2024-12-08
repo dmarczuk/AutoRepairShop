@@ -3,99 +3,94 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "Naprawy")
+@Table(name = "Repairs")
 public class Repair {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int naprawaID;
-    private Date data_rozpoczecia;
-    private Date data_zakonczenia;
-    private String stan;
-    private String opis_usterki;
-    private String protokol_naprawy;
+    private int repairId;
+    private Date startDate;
+    private Date endDate;
+    private String state;
+    private String description;
+    private String repairProtocol;
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "mechanikID")
-    private Mechanic mechanik;
-    //private int VIN; // klucz obcy
+    @JoinColumn(name = "mechanikId")
+    private Mechanic mechanic;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "vin")
-    private Car pojazd; // klucz obcy
+    private Car car;
 
-    public Repair(Car pojazd, Mechanic mechanik) {
-        this.pojazd = pojazd;
-        this.mechanik = mechanik;
+    public Repair(Car car, Mechanic mechanic) {
+        this.car = car;
+        this.mechanic = mechanic;
     }
 
-    public Repair(Car pojazd) {
-        this.pojazd = pojazd;
+    public Repair(Car car) {
+        this.car = car;
     }
 
     public Repair() {
 
     }
 
-    public int getNaprawaID() {
-        return naprawaID;
+    public int getRepairId() {
+        return repairId;
     }
 
-    public Date getData_rozpoczecia() {
-        return data_rozpoczecia;
+    public Date getStartDate() {
+        return startDate;
     }
 
-    public Date getData_zakonczenia() {
-        return data_zakonczenia;
+    public Date getEndDate() {
+        return endDate;
     }
 
-    public String getStan() {
-        return stan;
+    public String getState() {
+        return state;
     }
 
-    public String getOpis_usterki() {
-        return opis_usterki;
+    public String getDescription() {
+        return description;
     }
 
-    public String getProtokol_naprawy() {
-        return protokol_naprawy;
+    public String getRepairProtocol() {
+        return repairProtocol;
     }
 
-    public Mechanic getMechanik() {
-        return mechanik;
+    public Mechanic getMechanic() {
+        return mechanic;
     }
 
-    public Car getPojazd() {
-        return pojazd;
+    public Car getCar() {
+        return car;
     }
 
-    public void setNaprawaID(int naprawaID) {
-        this.naprawaID = naprawaID;
+    public void setRepairId(int repairId) {
+        this.repairId = repairId;
     }
 
-    public void setData_rozpoczecia(Date data_rozpoczecia) {
-        this.data_rozpoczecia = data_rozpoczecia;
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
 
-    public void setData_zakonczenia(Date data_zakonczenia) {
-        this.data_zakonczenia = data_zakonczenia;
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
-    public void setOpis_usterki(String opis_usterki) {
-        this.opis_usterki = opis_usterki;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public void setStan(String stan) {
-        this.stan = stan;
+    public void setState(String state) {
+        this.state = state;
     }
 
-    public void setProtokol_naprawy(String protokol_naprawy) {
-        this.protokol_naprawy = protokol_naprawy;
+    public void setRepairProtocol(String protokol_naprawy) {
+        this.repairProtocol = protokol_naprawy;
     }
 
-    public void setVIN(Car pojazd) {
-        this.pojazd = pojazd;
-    }
-
-    public void setMechanik(Mechanic mechanik) {
-        this.mechanik = mechanik;
+    public void setMechanic(Mechanic mechanik) {
+        this.mechanic = mechanik;
     }
 }

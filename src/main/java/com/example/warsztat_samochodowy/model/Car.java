@@ -6,79 +6,68 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "Pojazdy")
+@Table(name = "Cars")
 public class Car {
-
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String pojazdID = UUID.randomUUID().toString();
+    private String carId = UUID.randomUUID().toString();
 
     @Column(unique = true, nullable = false)
-    private String rejestracja;
-    private String marka;
+    private String vehicleRegistration;
+    private String mark;
     private String model;
-    private int rocznik;
+    private int year;
     @Id
-    //@JsonProperty("vin")
-    private String vin; // klucz podstawowy
+    private String vin;
 
-//    @JsonIgnoreProperties("pojazdy")
-//    @ManyToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "klient_klientID", insertable = false, updatable = false)
-//
     @ManyToOne
-    @JoinColumn(name = "klientid")
+    @JoinColumn(name = "clientId")
     @JsonBackReference
-    private Client klient;
-    //private int klientID;
+    private Client client;
 
     @OneToMany(cascade = CascadeType.ALL)
-    //@OneToMany(mappedBy = "pojazd", cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "vin")
-    private List<Repair> naprawy;
+    private List<Repair> repairs;
 
-
-
-    public Car(String rejestracja, String marka, String model, int rocznik, String vin) {
-        this.rejestracja = rejestracja;
-        this.marka = marka;
+    public Car(String vehicleRegistration, String mark, String model, int year, String vin) {
+        this.vehicleRegistration = vehicleRegistration;
+        this.mark = mark;
         this.model = model;
-        this.rocznik = rocznik;
+        this.year = year;
         this.vin = vin;
     }
 
     public Car() {
     }
 
-    public Client getKlient() {
-        return klient;
+    public Client getClient() {
+        return client;
     }
 
-    public void setKlient(Client klient) {
-        this.klient = klient;
+    public void setClient(Client client) {
+        this.client = client;
     }
 
-    public String getPojazdID() {
-        return pojazdID;
+    public String getCarId() {
+        return carId;
     }
 
-    public void setPojazdID(String ID) {
-        this.pojazdID = ID;
+    public void setCarId(String ID) {
+        this.carId = ID;
     }
 
-    public String getRejestracja() {
-        return rejestracja;
+    public String getVehicleRegistration() {
+        return vehicleRegistration;
     }
 
-    public void setRejestracja(String rejestracja) {
-        this.rejestracja = rejestracja;
+    public void setVehicleRegistration(String vehicleRegistration) {
+        this.vehicleRegistration = vehicleRegistration;
     }
 
-    public String getMarka() {
-        return marka;
+    public String getMark() {
+        return mark;
     }
 
-    public void setMarka(String marka) {
-        this.marka = marka;
+    public void setMark(String mark) {
+        this.mark = mark;
     }
 
     public String getModel() {
@@ -89,19 +78,19 @@ public class Car {
         this.model = model;
     }
 
-    public int getRocznik() {
-        return rocznik;
+    public int getYear() {
+        return year;
     }
 
-    public void setRocznik(int rocznik) {
-        this.rocznik = rocznik;
+    public void setYear(int year) {
+        this.year = year;
     }
 
-    public String getVIN() {
+    public String getVin() {
         return vin;
     }
 
-    public void setVIN(String VIN) {
-        this.vin = VIN;
+    public void setVin(String vin) {
+        this.vin = vin;
     }
 }

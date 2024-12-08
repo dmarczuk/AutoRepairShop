@@ -8,82 +8,78 @@ import java.util.List;
 
 
 @Entity
-@Table(name = "Klienci")
+@Table(name = "Clients")
 
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    //@Column(name = "klient_id")
-    private int klientID;
+    private int clientId;
     @Column(nullable = false)
-    private String imie;
+    private String firstName;
     @Column(nullable = false)
-    private String nazwisko;
+    private String secondName;
     @Column(nullable = false, unique = true)
-    private String telefon;
+    private String phoneNumber;
     @Column(nullable = false)
     private String email;
 
-    //@JsonIgnoreProperties("klient")
-    @OneToMany(cascade = CascadeType.ALL) //mappedBy = "klient"
-    //@OneToMany(mappedBy = "klient", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "klientID")
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "clientId")
     @JsonManagedReference
-    private List<Car> pojazdy = new ArrayList<>();
+    private List<Car> cars = new ArrayList<>();
 
-    public Client(String imie, String nazwisko, String telefon, String email, List<Car> pojazdy) {
-        this.imie = imie;
-        this.nazwisko = nazwisko;
-        this.telefon = telefon;
+    public Client(String firstName, String secondName, String phoneNumber, String email) {
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.phoneNumber = phoneNumber;
         this.email = email;
     }
 
     public Client() {
     }
 
-    public List<Car> getPojazdy() {
-        return pojazdy;
+    public List<Car> getCars() {
+        return cars;
     }
 
-    public void setPojazdy(List<Car> pojazdy) {
-        this.pojazdy = pojazdy;
+    public void setCars(List<Car> cars) {
+        this.cars = cars;
     }
 
-    public int getKlientID() {
-        return klientID;
+    public int getClientId() {
+        return clientId;
     }
 
-    public String getImie() {
-        return imie;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getNazwisko() {
-        return nazwisko;
+    public String getSecondName() {
+        return secondName;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public String getTelefon() {
-        return telefon;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setKlientID(int KlientID) {
-
-        this.klientID = KlientID;
+    public void setClientId(int clientId) {
+        this.clientId = clientId;
     }
 
-    public void setImie(String imie) {
-        this.imie = imie;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public void setNazwisko(String nazwisko) {
-        this.nazwisko = nazwisko;
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
     }
 
-    public void setTelefon(String telefon) {
-        this.telefon = telefon;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public void setEmail(String email) {

@@ -70,8 +70,8 @@ public class SecurityConfig implements UserDetailsService{
         //List<GrantedAuthority> authorities = new ArrayList<>();
         //authorities.add(new SimpleGrantedAuthority("ROLE_MECHANIC"));
         return User.builder()
-                .username(mechanik.getLogin())
-                .password(mechanik.getHaslo())
+                .username(mechanik.getUsername())
+                .password(mechanik.getPassword())
                 .roles("MECHANIC")
                 .build();
     }

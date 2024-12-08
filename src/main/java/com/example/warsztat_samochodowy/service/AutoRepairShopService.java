@@ -54,7 +54,7 @@ public class AutoRepairShopService {
     }
     @Transactional
     public Client Dodawanie_klienta(Client klient){
-        Optional<Client> existingKlient = klientRepository.findByTelefon(klient.getTelefon());
+        Optional<Client> existingKlient = klientRepository.findByTelefon(klient.getPhoneNumber());
         if (existingKlient.isPresent()) {
             throw new ClientAlreadyExistException("Klient z podanym numerem telefonu już istnieje w bazie");
         }
@@ -65,8 +65,8 @@ public class AutoRepairShopService {
         if (staryKlient.isEmpty()) {
             throw new ClientNotFoundException("Nie znaleziono klienta z podanym numerem telefonu");
         }
-        staryKlient.get().setImie(klient.getFirstName());
-        staryKlient.get().setNazwisko(klient.getSecondName());
+        staryKlient.get().setFirstName(klient.getFirstName());
+        staryKlient.get().setSecondName(klient.getSecondName());
         staryKlient.get().setEmail(klient.getEmail());
         return klientRepository.save(staryKlient.get());
     }
@@ -76,18 +76,18 @@ public class AutoRepairShopService {
         return listaMechanikow;
     }
     public Mechanic Dodawanie_mechanika(Mechanic mechanik) {
-        String zahaszowaneHaslo = passwordEncoder.encode(mechanik.getHaslo());
-        Mechanic nowyMechanik = new Mechanic(mechanik.getImie(), mechanik.getNazwisko(), mechanik.getLogin(), zahaszowaneHaslo);
-        Optional<Mechanic> existingMechanik = mechanikRepository.findByLogin(mechanik.getLogin());
+        String zahaszowaneHaslo = passwordEncoder.encode(mechanik.getPassword());
+        Mechanic nowyMechanik = new Mechanic(mechanik.getFirstName(), mechanik.getSecondName(), mechanik.getUsername(), zahaszowaneHaslo);
+        Optional<Mechanic> existingMechanik = mechanikRepository.findByLogin(mechanik.getUsername());
         if (existingMechanik.isPresent()) {
             throw new MechanicAlreadyExistException("Mechanik z takim loginem już istnieje w bazie");
         }
         return mechanikRepository.save(nowyMechanik);
     }
     public void Zwolnienie_mechanika(Mechanic mechanik){
-        Optional<Mechanic> mechanikZBazy = mechanikRepository.findByLogin(mechanik.getLogin());
+        Optional<Mechanic> mechanikZBazy = mechanikRepository.findByLogin(mechanik.getUsername());
         if(mechanikZBazy.isPresent()){
-            mechanikZBazy.get().setCzyZatrudniony("NIE");
+            mechanikZBazy.get().setIfEmployed("NIE");
             mechanikRepository.save(mechanikZBazy.get());
         } else {
             throw new MechanicNotFoundException("Mechanik nie istnieje w bazie");
@@ -105,7 +105,7 @@ public class AutoRepairShopService {
 
     public Repair Dodanie_mechanika_do_naprawy(RepairDto naprawaDto) {
         //Optional<Pojazd> pojazd = pojazdRepository.findByVin(naprawaDto.getPojazd().getVIN());
-        Optional<Mechanic> mechanik = mechanikRepository.findByImieAndNazwisko(naprawaDto.getMechanic().getImie(), naprawaDto.getMechanic().getNazwisko());
+        Optional<Mechanic> mechanik = mechanikRepository.findByImieAndNazwisko(naprawaDto.getMechanic().getFirstName(), naprawaDto.getMechanic().getSecondName());
         if (mechanik.isEmpty()) {
             throw new MechanicNotFoundException("Nie znalezniono mechanika z podanym imieniem i nazwiskiem");
         }
@@ -113,7 +113,7 @@ public class AutoRepairShopService {
         if (naprawa.isEmpty()) {
             throw new RepairNotFoundException("Nie znaleziono podanej naprawy. Nie udało się dodać mechanika");
         }
-        naprawa.get().setMechanik(mechanik.get());
+        naprawa.get().setMechanic(mechanik.get());
         return naprawaRepository.save(naprawa.get());
     }
     public List<Car>Podglad_pojazdow(){
@@ -130,7 +130,7 @@ public class AutoRepairShopService {
         if (klient.isEmpty()) {
             throw new ClientNotFoundException("Klient z podanym telefonem nie istnieje w bazie");
         }
-        pojazd.setKlient(klient.get());
+        pojazd.setClient(klient.get());
         return pojazdRepository.save(pojazd);
     }
     public Car Modyfikacje_danych_pojazdu(Car pojazd){
@@ -138,27 +138,27 @@ public class AutoRepairShopService {
         if (staryPojazd.isEmpty()) {
             throw new CarNotFoundException("Pojazd z podanym numerem VIN nie istnieje w bazie");
         }
-        staryPojazd.get().setPojazdID(pojazd.getPojazdID());
-        staryPojazd.get().setMarka(pojazd.getMarka());
+        staryPojazd.get().setCarId(pojazd.getCarId());
+        staryPojazd.get().setMark(pojazd.getMark());
         staryPojazd.get().setModel(pojazd.getModel());
-        staryPojazd.get().setRejestracja(pojazd.getRejestracja());
-        staryPojazd.get().setRocznik(pojazd.getRocznik());
+        staryPojazd.get().setVehicleRegistration(pojazd.getVehicleRegistration());
+        staryPojazd.get().setYear(pojazd.getYear());
         return pojazdRepository.save(staryPojazd.get());
     }
 
     @Transactional
     public Repair Dodanie_nowego_zgloszenia(Client klient, Car pojazd) {
         //??? za pierwszym razem nie dziala - if nie wchodza??? debugowac trzeba
-        Optional<Client> klientInDatabase = klientRepository.findByTelefon(klient.getTelefon());
+        Optional<Client> klientInDatabase = klientRepository.findByTelefon(klient.getPhoneNumber());
         Optional<Car> pojazdInDatabase = pojazdRepository.findByVin(pojazd.getVIN());
 
         Client savedKlient = klientInDatabase.orElseGet(() -> Dodawanie_klienta(klient));
         Repair nowa_naprawa;
         if (pojazdInDatabase.isEmpty()) {
-            Car savedPojazd = Dodawanie_pojazdu(pojazd, klient.getTelefon());// Dodawanie_pojazdu(pojazd, klient);
+            Car savedPojazd = Dodawanie_pojazdu(pojazd, klient.getPhoneNumber());// Dodawanie_pojazdu(pojazd, klient);
             nowa_naprawa = new Repair(savedPojazd);
         } else {
-            if (!pojazdInDatabase.get().getKlient().getTelefon().equals(savedKlient.getTelefon())) {
+            if (!pojazdInDatabase.get().getClient().getPhoneNumber().equals(savedKlient.getPhoneNumber())) {
                 throw new ClientAlreadyExistException("Pojazd posiada już właściciela z innym numerem telefonu");
             }
             nowa_naprawa = new Repair(pojazdInDatabase.get());

@@ -4,87 +4,84 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "Mechanicy")
+@Table(name = "Mechanics")
 public class Mechanic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int mechanikID;
+    private int mechanicId;
     @Column(nullable = false)
-    private String imie;
+    private String firstName;
     @Column(nullable = false)
-    private String nazwisko;
+    private String secondName;
 
     @Column(nullable = false)
-    private String login;
+    private String username;
     @Column(nullable = false)
-    private String haslo;
+    private String password;
 
     @Column(nullable = false)
-    private String czyZatrudniony;
-    //private int naprawy;
+    private String ifEmployed;
 
-    @OneToMany(mappedBy = "mechanik", cascade = CascadeType.ALL, orphanRemoval = true)
-    // co robi mappedBy, oraz orphanRemoval?
-    //@JoinColumn(name = "klientID")
-    private List<Repair> naprawy;
+    @OneToMany(mappedBy = "mechanic", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Repair> repairs;
 
 
-    public Mechanic(String imie, String nazwisko, String login, String haslo) {
-        this.nazwisko = nazwisko;
-        this.imie = imie;
-        this.czyZatrudniony = "TAK";
-        this.login = login;
-        this.haslo = haslo;
+    public Mechanic(String firstName, String secondName, String login, String password) {
+        this.secondName = secondName;
+        this.firstName = firstName;
+        this.ifEmployed = "TAK";
+        this.username = login;
+        this.password = password;
     }
 
     public Mechanic() {
     }
 
-    public int getMechanikID() {
-        return mechanikID;
+    public int getMechanicId() {
+        return mechanicId;
     }
 
-    public void setMechanikID(int mechanikID) {
-        this.mechanikID = mechanikID;
+    public void setMechanicId(int mechanicId) {
+        this.mechanicId = mechanicId;
     }
 
-    public String getLogin() {
-        return login;
+    public String getUsername() {
+        return username;
     }
 
-    public void setLogin(String username) {
-        this.login = username;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getHaslo() {
-        return haslo;
+    public String getPassword() {
+        return password;
     }
 
-    public void setHaslo(String password) {
-        this.haslo = password;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public String getImie() {
-        return imie;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setImie(String imie) {
-        this.imie = imie;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getNazwisko() {
-        return nazwisko;
+    public String getSecondName() {
+        return secondName;
     }
 
-    public void setNazwisko(String nazwisko) {
-        this.nazwisko = nazwisko;
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
     }
 
-    public String getCzyZatrudniony() {
-        return czyZatrudniony;
+    public String getIfEmployed() {
+        return ifEmployed;
     }
 
-    public void setCzyZatrudniony(String czyZatrudniony) {
-        this.czyZatrudniony = czyZatrudniony;
+    public void setIfEmployed(String ifEmployed) {
+        this.ifEmployed = ifEmployed;
     }
 }
