@@ -10,9 +10,9 @@ import java.util.Optional;
 public interface MechanicRepository extends JpaRepository<Mechanic, Integer> {
 
 
-    Optional<Mechanic> findByMechanikID(int mechanikID);
+    Optional<Mechanic> findByMechanicId(int mechanikID);
 
-    Optional<Mechanic> findByLogin(String login);
+    Optional<Mechanic> findByUsername(String username);
 
-    Optional<Mechanic> findByImieAndNazwisko(String imie, String nazwisko);
+    Optional<Mechanic> findByFirstNameAndSecondName(String firstName, String secondName);
 }

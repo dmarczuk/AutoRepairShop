@@ -10,7 +10,6 @@ import java.util.Optional;
 public interface RepairRepository extends JpaRepository<Repair, Integer> {
 
 
-    Optional<Repair> findByNaprawaID(int naprawaID);
+    Optional<Repair> findByRepairId(int repairID);
 
-    //Optional<Naprawa> findByPojazd(Pojazd pojazd);
 }

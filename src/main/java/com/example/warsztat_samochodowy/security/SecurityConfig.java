@@ -57,8 +57,6 @@ public class SecurityConfig implements UserDetailsService{
     @Override
     public UserDetails loadUserByUsername(String username) throws MechanicNotFoundException {
         if ("admin".equals(username)) {
-            //List<GrantedAuthority> adminAuthorities = new ArrayList<>();
-            //adminAuthorities.add(new SimpleGrantedAuthority("ADMIN"));
             return User.builder()
                     .username("admin")
                     .password(passwordEncoder().encode("admin"))
@@ -67,71 +65,11 @@ public class SecurityConfig implements UserDetailsService{
         }
         Mechanic mechanik = mechanikRepository.findByLogin(username)
                 .orElseThrow(() -> new MechanicNotFoundException("Mechanik z podana nazwa użytkownika nie istnieje"));
-        //List<GrantedAuthority> authorities = new ArrayList<>();
-        //authorities.add(new SimpleGrantedAuthority("ROLE_MECHANIC"));
         return User.builder()
                 .username(mechanik.getUsername())
                 .password(mechanik.getPassword())
                 .roles("MECHANIC")
                 .build();
     }
-
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        UserDetails user = User.builder()
-//                        .username("admin")
-//                        .password(passwordEncoder().encode("admin"))
-//                        .roles("ADMIN")
-//                        .build();
-//
-//        return new InMemoryUserDetailsManager(user);
-//    }
-
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .authorizeHttpRequests(authorize -> authorize
-//                        .requestMatchers("/").permitAll()
-//                        .requestMatchers("/test").permitAll()
-//                        .requestMatchers("/klienci").hasRole("MECHANIC")
-//                        .requestMatchers("/admin").hasRole("ADMIN")
-//                        .anyRequest().authenticated()
-//                )
-//                .httpBasic(Customizer.withDefaults())
-//                .formLogin(Customizer.withDefaults());
-//
-//        return http.build();
-//    }
-
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        return new CustomUserDetailsService(mechanikRepository, passwordEncoder());
-//    }
-//
-//    @AllArgsConstructor
-//    public static class CustomUserDetailsService implements UserDetailsService {
-//
-//        private final MechanikRepository mechanikRepository;
-//        private final PasswordEncoder passwordEncoder;
-//
-//        @Override
-//        public UserDetails loadUserByUsername(String username) throws MechanikNotFoundError {
-//            if ("admin".equals(username)) {
-//                return User.builder()
-//                        .username("admin")
-//                        .password(passwordEncoder.encode("admin"))
-//                        .roles("ADMIN")
-//                        .build();
-//            } else {
-//                Mechanik mechanik = mechanikRepository.findByLogin(username)
-//                        .orElseThrow(() -> new MechanikNotFoundError("Mechanik z podana nazwa użytkownika nie istnieje"));
-//                List<GrantedAuthority> authorities = new ArrayList<>();
-//                authorities.add(new SimpleGrantedAuthority("ROLE_MECHANIC"));
-//                return new User(mechanik.getLogin(), mechanik.getHaslo(), authorities);
-//            }
-//        }
-//    }
-
 
 }
