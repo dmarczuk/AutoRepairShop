@@ -64,4 +64,12 @@ public class RestControllerErrorHandler {
         String message = exception.getMessage();
         return new ErrorResponse(message, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(EndDateBeforeDateStartsException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+    public ErrorResponse endDateBeforeDateStartsException(EndDateBeforeDateStartsException exception) {
+        String message = exception.getMessage();
+        return new ErrorResponse(message, HttpStatus.NOT_ACCEPTABLE);
+    }
 }
