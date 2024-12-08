@@ -42,10 +42,10 @@ public class SecurityConfig implements UserDetailsService{
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/login", "/dodaj/nowe/zgloszenie").permitAll()
-                        .requestMatchers("/klienci", "/pojazdy", "/modyfikuj/dane/pojazdow", "/naprawy", "/przyjecie/naprawy").hasAnyRole("MECHANIC", "ADMIN")
-                        .requestMatchers("/modyfikuj/opis_usterki", "/modyfikuj/rozpoczecie_naprawy", "/modyfikuj/zakonczenie_naprawy").hasAnyRole("MECHANIC", "ADMIN")
-                        .requestMatchers("/dodaj/klienta", "/modyfikuj/dane/klienta", "/dodaj/pojazd", "/dodaj/mechanika", "mechanicy", "/zwolnij/mechanika").hasRole("ADMIN")
+                        .requestMatchers("/", "/login", "/add/new/ticket").permitAll()
+                        .requestMatchers("/clients", "/cars", "/modify/car", "/repairs", "/accept/repair").hasAnyRole("MECHANIC", "ADMIN")
+                        .requestMatchers("/modify/description", "/modify/repairStartDate", "/modify/repairEndDate").hasAnyRole("MECHANIC", "ADMIN")
+                        .requestMatchers("/add/client", "/modify/client", "/add/car", "/add/mechanic", "/mechanics", "/fire/mechanic").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())
@@ -63,13 +63,12 @@ public class SecurityConfig implements UserDetailsService{
                     .roles("ADMIN")
                     .build();
         }
-        Mechanic mechanik = mechanikRepository.findByLogin(username)
-                .orElseThrow(() -> new MechanicNotFoundException("Mechanik z podana nazwa użytkownika nie istnieje"));
+        Mechanic mechanik = mechanicRepository.findByUsername(username)
+                .orElseThrow(() -> new MechanicNotFoundException("Mechanic with the given username not found"));
         return User.builder()
                 .username(mechanik.getUsername())
                 .password(mechanik.getPassword())
                 .roles("MECHANIC")
                 .build();
     }
-
 }
