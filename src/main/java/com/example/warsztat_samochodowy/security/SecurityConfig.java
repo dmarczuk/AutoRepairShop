@@ -1,37 +1,41 @@
 package com.example.warsztat_samochodowy.security;
 
-import com.example.warsztat_samochodowy.error.MechanikNotFoundError;
-import com.example.warsztat_samochodowy.model.Mechanik;
-import com.example.warsztat_samochodowy.repository.MechanikRepository;
-import com.example.warsztat_samochodowy.service.Mechanik_serwis;
+import com.example.warsztat_samochodowy.error.MechanicNotFoundException;
+import com.example.warsztat_samochodowy.model.Mechanic;
+import com.example.warsztat_samochodowy.repository.MechanicRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.server.ServerWebExchange;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.Duration;
+import java.util.Arrays;
+import java.util.Collections;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @AllArgsConstructor
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig implements UserDetailsService{
 
-    private final MechanikRepository mechanikRepository;
+    private final MechanicRepository mechanicRepository;
+    private final JwtAuthenticationFilter jwtAuthTokenFilter;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -46,99 +50,50 @@ public class SecurityConfig implements UserDetailsService{
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
+        http.cors(corsCustomizer->corsCustomizer.configurationSource(new CorsConfigurationSource() {
+                    @Override
+                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                        CorsConfiguration corsConfiguration=new CorsConfiguration();
+                        corsConfiguration.setAllowCredentials(true);// allows taking authentication with credentials
+                        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:8080"));
+                        // providing the allowed origin details, can provide multiple origins here, 7070 is the port number of client application here
+                        corsConfiguration.setAllowedMethods(Collections.singletonList("*"));// allowing all HTTP methods GET,POST,PUT etc, can configure on your need
+                        corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));// allowing all the request headers, can configure according to your need, which headers to allow
+                        corsConfiguration.setMaxAge(Duration.ofMinutes(5L)); // setting the max time till which the allowed origin will not make a pre-flight request again to check if the CORS is allowed on not
+                        return corsConfiguration;
+                    }
+
+                }))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/login", "/dodaj/nowe/zgloszenie").permitAll()
-                        .requestMatchers("/klienci", "/pojazdy", "/modyfikuj/dane/pojazdow", "/naprawy", "/przyjecie/naprawy").hasAnyRole("MECHANIC", "ADMIN")
-                        .requestMatchers("/modyfikuj/opis_usterki", "/modyfikuj/rozpoczecie_naprawy", "/modyfikuj/zakonczenie_naprawy").hasAnyRole("MECHANIC", "ADMIN")
-                        .requestMatchers("/dodaj/klienta", "/modyfikuj/dane/klienta", "/dodaj/pojazd", "/dodaj/mechanika", "mechanicy", "/zwolnij/mechanika").hasRole("ADMIN")
+                        .requestMatchers("/", "/login","/clients", "/add/new/ticket", "/mechanics", "/repairs", "/cars", "/add/client", "/accept/repair", "/add/mechanic").permitAll()
+                        //.requestMatchers("/clients", "/cars", "/modify/car", "/repairs", "/accept/repair").hasAnyRole("MECHANIC", "ADMIN")
+                        .requestMatchers( "/modify/car").hasAnyRole("MECHANIC", "ADMIN")
+                        .requestMatchers("/modify/description", "/modify/repairStartDate", "/modify/repairEndDate").hasAnyRole("MECHANIC", "ADMIN")
+                        .requestMatchers("/modify/client", "/add/car", "/fire/mechanic").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
-                .httpBasic(Customizer.withDefaults())
-                .formLogin(Customizer.withDefaults());
+                .httpBasic(withDefaults())
+                .addFilterBefore(jwtAuthTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws MechanikNotFoundError {
+    public UserDetails loadUserByUsername(String username) throws MechanicNotFoundException {
         if ("admin".equals(username)) {
-            //List<GrantedAuthority> adminAuthorities = new ArrayList<>();
-            //adminAuthorities.add(new SimpleGrantedAuthority("ADMIN"));
             return User.builder()
                     .username("admin")
                     .password(passwordEncoder().encode("admin"))
                     .roles("ADMIN")
                     .build();
         }
-        Mechanik mechanik = mechanikRepository.findByLogin(username)
-                .orElseThrow(() -> new MechanikNotFoundError("Mechanik z podana nazwa użytkownika nie istnieje"));
-        //List<GrantedAuthority> authorities = new ArrayList<>();
-        //authorities.add(new SimpleGrantedAuthority("ROLE_MECHANIC"));
+        Mechanic mechanik = mechanicRepository.findByUsername(username)
+                .orElseThrow(() -> new MechanicNotFoundException("Mechanic with the given username not found"));
         return User.builder()
-                .username(mechanik.getLogin())
-                .password(mechanik.getHaslo())
+                .username(mechanik.getUsername())
+                .password(passwordEncoder().encode(mechanik.getPassword()))
                 .roles("MECHANIC")
                 .build();
     }
-
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        UserDetails user = User.builder()
-//                        .username("admin")
-//                        .password(passwordEncoder().encode("admin"))
-//                        .roles("ADMIN")
-//                        .build();
-//
-//        return new InMemoryUserDetailsManager(user);
-//    }
-
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .authorizeHttpRequests(authorize -> authorize
-//                        .requestMatchers("/").permitAll()
-//                        .requestMatchers("/test").permitAll()
-//                        .requestMatchers("/klienci").hasRole("MECHANIC")
-//                        .requestMatchers("/admin").hasRole("ADMIN")
-//                        .anyRequest().authenticated()
-//                )
-//                .httpBasic(Customizer.withDefaults())
-//                .formLogin(Customizer.withDefaults());
-//
-//        return http.build();
-//    }
-
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        return new CustomUserDetailsService(mechanikRepository, passwordEncoder());
-//    }
-//
-//    @AllArgsConstructor
-//    public static class CustomUserDetailsService implements UserDetailsService {
-//
-//        private final MechanikRepository mechanikRepository;
-//        private final PasswordEncoder passwordEncoder;
-//
-//        @Override
-//        public UserDetails loadUserByUsername(String username) throws MechanikNotFoundError {
-//            if ("admin".equals(username)) {
-//                return User.builder()
-//                        .username("admin")
-//                        .password(passwordEncoder.encode("admin"))
-//                        .roles("ADMIN")
-//                        .build();
-//            } else {
-//                Mechanik mechanik = mechanikRepository.findByLogin(username)
-//                        .orElseThrow(() -> new MechanikNotFoundError("Mechanik z podana nazwa użytkownika nie istnieje"));
-//                List<GrantedAuthority> authorities = new ArrayList<>();
-//                authorities.add(new SimpleGrantedAuthority("ROLE_MECHANIC"));
-//                return new User(mechanik.getLogin(), mechanik.getHaslo(), authorities);
-//            }
-//        }
-//    }
-
-
 }

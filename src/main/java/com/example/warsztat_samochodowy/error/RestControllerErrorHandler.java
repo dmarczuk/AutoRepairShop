@@ -9,58 +9,58 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class RestControllerErrorHandler {
 
-    @ExceptionHandler(KlientAlreadyExistError.class)
+    @ExceptionHandler(ClientAlreadyExistException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse klientAlreadyExist(KlientAlreadyExistError exception) {
+    public ErrorResponse klientAlreadyExist(ClientAlreadyExistException exception) {
         String message = exception.getMessage();
         return new ErrorResponse(message, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(PojazdAlreadyExistError.class)
+    @ExceptionHandler(CarAlreadyExistException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse pojazdAlreadyExist(PojazdAlreadyExistError exception) {
+    public ErrorResponse pojazdAlreadyExist(CarAlreadyExistException exception) {
         String message = exception.getMessage();
         return new ErrorResponse(message, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(MechanikAlreadyExistError.class)
+    @ExceptionHandler(MechanicAlreadyExistException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse mechanikAlreadyExist(MechanikAlreadyExistError exception) {
+    public ErrorResponse mechanikAlreadyExist(MechanicAlreadyExistException exception) {
         String message = exception.getMessage();
         return new ErrorResponse(message, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(KlientNotFoundError.class)
+    @ExceptionHandler(ClientNotFoundException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse klientNotFoundError(KlientNotFoundError exception) {
+    public ErrorResponse klientNotFoundError(ClientNotFoundException exception) {
         String message = exception.getMessage();
         return new ErrorResponse(message, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(MechanikNotFoundError.class)
+    @ExceptionHandler(MechanicNotFoundException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse mechanikNotFoundError(MechanikNotFoundError exception) {
+    public ErrorResponse mechanikNotFoundError(MechanicNotFoundException exception) {
         String message = exception.getMessage();
         return new ErrorResponse(message, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(PojazdNotFoundError.class)
+    @ExceptionHandler(CarNotFoundException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse pojazdNotFoundError(PojazdNotFoundError exception) {
+    public ErrorResponse pojazdNotFoundError(CarNotFoundException exception) {
         String message = exception.getMessage();
         return new ErrorResponse(message, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(NaprawaNotFoundError.class)
+    @ExceptionHandler(RepairNotFoundException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse naprawaNotFoundError(NaprawaNotFoundError exception) {
+    public ErrorResponse naprawaNotFoundError(RepairNotFoundException exception) {
         String message = exception.getMessage();
         return new ErrorResponse(message, HttpStatus.NOT_FOUND);
     }
