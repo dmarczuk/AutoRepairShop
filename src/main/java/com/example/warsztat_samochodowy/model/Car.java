@@ -14,7 +14,7 @@ public class Car {
     private String vehicleRegistration;
     private String mark;
     private String model;
-    private int year;
+    private int productionYear;
     @Id
     private String vin;
 
@@ -31,7 +31,7 @@ public class Car {
         this.vehicleRegistration = vehicleRegistration;
         this.mark = mark;
         this.model = model;
-        this.year = year;
+        this.productionYear = year;
         this.vin = vin;
     }
 
@@ -78,12 +78,12 @@ public class Car {
         this.model = model;
     }
 
-    public int getYear() {
-        return year;
+    public int getProductionYear() {
+        return productionYear;
     }
 
-    public void setYear(int year) {
-        this.year = year;
+    public void setProductionYear(int year) {
+        this.productionYear = year;
     }
 
     public String getVin() {

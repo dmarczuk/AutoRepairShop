@@ -14,6 +14,8 @@ public class Repair {
     private String state;
     private String description;
     private String repairProtocol;
+
+    private String phoneNumber;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "mechanikId")
     private Mechanic mechanic;
@@ -26,12 +28,25 @@ public class Repair {
         this.mechanic = mechanic;
     }
 
+    public Repair(Car car, String phoneNumber) {
+        this.car = car;
+        this.phoneNumber = phoneNumber;
+    }
+
     public Repair(Car car) {
         this.car = car;
     }
 
     public Repair() {
 
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public int getRepairId() {

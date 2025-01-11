@@ -8,13 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 @RestController
+//@CrossOrigin(origins = "http://localhost:3000")
 public class MechanicController {
 
     private final MechanicService mechanicService;
 
     @PatchMapping("/accept/repair")
     public ResponseEntity<Repair> acceptTicket (@RequestBody RepairMechanicDto repairMechanicDto){
-        Repair acceptedTicket = mechanicService.acceptTicket(repairMechanicDto.getRepair(), repairMechanicDto.getMechanic());
+        Repair acceptedTicket = mechanicService.acceptTicket(repairMechanicDto.getRepairId(), repairMechanicDto.getMechanicUsername());
         return ResponseEntity.ok(acceptedTicket);
     }
 

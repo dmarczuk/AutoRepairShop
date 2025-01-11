@@ -29,7 +29,7 @@ public class Mechanic {
     public Mechanic(String firstName, String secondName, String login, String password) {
         this.secondName = secondName;
         this.firstName = firstName;
-        this.ifEmployed = "TAK";
+        this.ifEmployed = "YES";
         this.username = login;
         this.password = password;
     }

@@ -5,14 +5,14 @@ import com.example.warsztat_samochodowy.model.Mechanic;
 
 public class RepairMechanicDto {
 
-    private Repair repair;
-    private Mechanic mechanic;
+    private int repairId;
+    private String mechanicUsername;
 
-    public Repair getRepair() {
-        return repair;
+    public int getRepairId() {
+        return repairId;
     }
 
-    public Mechanic getMechanic() {
-        return mechanic;
+    public String getMechanicUsername() {
+        return mechanicUsername;
     }
 }

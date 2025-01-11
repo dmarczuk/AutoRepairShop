@@ -79,12 +79,12 @@ public class AutoRepairShopService {
         return repairRepository.save(repair);
     }
 
-    public Repair addMechanicToRepair(RepairDto repairDtoDto) {
-        Optional<Mechanic> mechanik = mechanicRepository.findByUsername(repairDtoDto.getMechanic().getUsername());
+    public Repair addMechanicToRepair(RepairDto repairDto) {
+        Optional<Mechanic> mechanik = mechanicRepository.findByUsername(repairDto.getMechanic().getUsername());
         if (mechanik.isEmpty()) {
             throw new MechanicNotFoundException("Mechanic with the given username not found");
         }
-        Optional<Repair> repair = repairRepository.findById(repairDtoDto.getNaprawaId());
+        Optional<Repair> repair = repairRepository.findById(repairDto.getNaprawaId());
         if (repair.isEmpty()) {
             throw new RepairNotFoundException("Repair not found. Mechanic cannot be added");
         }
@@ -117,7 +117,7 @@ public class AutoRepairShopService {
         carInDatabase.get().setMark(car.getMark());
         carInDatabase.get().setModel(car.getModel());
         carInDatabase.get().setVehicleRegistration(car.getVehicleRegistration());
-        carInDatabase.get().setYear(car.getYear());
+        carInDatabase.get().setProductionYear(car.getProductionYear());
         return carRepository.save(carInDatabase.get());
     }
 
@@ -130,12 +130,12 @@ public class AutoRepairShopService {
         Repair newRepair;
         if (pojazdInDatabase.isEmpty()) {
             Car savedCar = addCar(car, client.getPhoneNumber());
-            newRepair = new Repair(savedCar);
+            newRepair = new Repair(savedCar, client.getPhoneNumber());
         } else {
             if (!pojazdInDatabase.get().getClient().getPhoneNumber().equals(savedClient.getPhoneNumber())) {
                 throw new ClientAlreadyExistException("Car with the given VIN is already assigned to another client");
             }
-            newRepair = new Repair(pojazdInDatabase.get());
+            newRepair = new Repair(pojazdInDatabase.get(), client.getPhoneNumber());
         }
         return addRepair(newRepair);
     }

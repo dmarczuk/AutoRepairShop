@@ -1,205 +1,154 @@
-localhost:8080/dodaj/klienta
+localhost:8080/add/client
 
 {
-    "imie": "Bozena",
-    "nazwisko": "Kowalska",
-    "telefon": "753289111",
+    "firstName": "Bozena",
+    "secondName": "Kowalska",
+    "phoneNumber": "753289111",
     "email": "bozenakowalska@gmail.com"
 }
 
-localhost:8080/klienci
+localhost:8080/clients
 
-localhost:8080/modyfikuj/dane/klienta
+localhost:8080/modify/client
 {
-    "imie": "Bozena",
-    "nazwisko": "Kowalska",
-    "telefon": "753289111",
+    "firstName": "Bozena",
+    "secondName": "Kowalska",
+    "phoneNumber": "753289111",
     "email": "kowalska@gmail.com"
 }
 
-localhost:8080/klienci
+localhost:8080/clients
 
-localhost:8080/dodaj/pojazd
+localhost:8080/add/car
 
 {
-    "pojazd": {
-        "rejestracja": "DW 19831",
-        "marka": "Audi",
+    "car": {
+        "vehicleRegistration": "DW 19831",
+        "mark": "Audi",
         "model": "S7",
-        "rocznik": 2011,
+        "productionYear": 2011,
         "vin": "ABSDAE221293821283"
     },
-    "telefonKlienta": "753289111"
+    "phoneNumber": "753289111"
 }
 
-localhost:8080/pojazdy
+localhost:8080/cars
 
-localhost:8080/klienci
+localhost:8080/clients
 
-localhost:8080/modyfikuj/dane/pojazdow
+localhost:8080/modify/car
 
 {
-     "rejestracja": "DW 20131",
-     "marka": "Audi",
+     "vehicleRegistration": "DW 20131",
+     "mark": "Audi",
      "model": "S7",
-     "rocznik": 2011,
+     "productionYear": 2011,
      "vin": "ABSDAE221293821283"
 }
 
-localhost:8080/pojazdy
+localhost:8080/cars
 
-localhost:8080/dodaj/mechanika
-
-{
-    "imie": "Zdzisław",
-    "nazwisko": "Przybylski",
-    "czyZatrudniony": true,
-    "login": "zdzislaw",
-    "haslo": "zdzislaw123"
-}
-
-localhost:8080/mechanicy
-
-localhost:8080/zwolnij/mechanika
+localhost:8080/add/mechanic
 
 {
-    "login": "zdzislaw"
+    "firstName": "Zdzisław",
+    "secondName": "Przybylski",
+    "ifEmployed": true,
+    "username": "zdzislaw",
+    "password": "zdzislaw123"
 }
 
-localhost:8080/mechanicy
+localhost:8080/mechanics
 
-localhost:8080/dodaj/mechanika
+localhost:8080/fire/mechanic
 
 {
-    "imie": "Michal",
-    "nazwisko": "Przybylski",
-    "czyZatrudniony": true,
-    "login": "michal",
-    "haslo": "michal123"
+    "username": "zdzislaw"
 }
 
-localhost:8080/mechanicy
+localhost:8080/mechanics
 
-
-localhost:8080/dodaj/naprawe  // jesli brak naprawy to jakis komunikat trzeba
-np dana naprawa jeszcze nie istnieje
+localhost:8080/add/mechanic
 
 {
-    "naprawaID": 1,
-
-    "mechanik":
-    {
-        "imie": "Zdzisław",
-        "nazwisko": "Przybylski"
-    }
+    "firstName": "Michal",
+    "secondName": "Przybylski",
+    "ifEmployed": true,
+    "username": "michal",
+    "password": "michal123"
 }
 
-{
-    "pojazd":
-    {
-        "vin": "ABSDAE221293821283"
-    },
-    "mechanik":
-    {
-        "imie": "Zdzisław",
-        "nazwisko": "Przybylski"
-    }
-}
+localhost:8080/mechanics
 
-localhost:8080/naprawy
 
-localhost:8080/dodaj/nowe/zgloszenie
+localhost:8080/repairs
+
+localhost:8080/add/new/ticket
 // dla nieistniejacego klienta
 {
-     "klient": {
-         "imie": "Piotr",
-         "nazwisko": "Kowalski",
-         "telefon": "953289111",
+     "client": {
+         "firstName": "Piotr",
+         "secondName": "Kowalski",
+         "phoneNumber": "953289111",
          "email": "kowalski_piotr@gmail.com"
      },
-     "pojazd": {
-         "rejestracja": "KR 19831",
-         "marka": "Audi",
+     "car": {
+         "vehicleRegistration": "KR 19831",
+         "mark": "Audi",
          "model": "S7",
-         "rocznik": 2011,
+         "productionYear": 2011,
          "vin": "XXXDAE221293821283"
      }
 }
-// dla instniejacego klienta z pojazdem - OK
+// dla instniejacego klienta z pojazdem
 {
-     "klient": {  // jesli klient istnieje to wystarczy podac tylko telefon
-         "imie": "Bozena",
-         "nazwisko": "Kowalska",
-         "telefon": "753289111",
+     "client": {  // jesli klient istnieje to wystarczy podac tylko telefon
+         "firstName": "Bozena",
+         "secondName": "Kowalska",
+         "phoneNumber": "753289111",
          "email": "kowalska@gmail.com"
      },
-     "pojazd": {
-         "rejestracja": "DW 20131",
-         "marka": "Audi",
+     "car": {
+         "vehicleRegistration": "DW 20131",
+         "mark": "Audi",
          "model": "S7",
-         "rocznik": 2011,
+         "productionYear": 2011,
          "vin": "ABSDAE221293821283"
      }
 }
 
-localhost:8080/naprawy
+localhost:8080/repairs
 
-localhost:8080/dodaj/nowe_zgloszenie
+localhost:8080/accept/repair
 {
-    "klient": {
-        "imie": "Bozena",
-        "nazwisko": "Kowalska",
-        "telefon": "753289111",
-        "email": "bozenakowalska@gmail.com"
-    },
-    "pojazd": {
-        "rejestracja": "DW 19831",
-        "marka": "Audi",
-        "model": "S7",
-        "rocznik": 2011,
-        "vin": "ABSDAE221293821283"
-    },
-    "mechanik": {
-        "imie": "Zdzisław",
-        "nazwisko": "Przybylski"
-    }
+    "repairId": 1,
+    "mechanicUsername": "zdzislaw"
 }
 
-localhost:8080/przyjecie/naprawy
-{
-    "naprawa": {
-        "naprawaID": 1
-    },
-    "mechanik": {
-        "imie": "Zdzisław",
-        "nazwisko": "Przybylski"
-    }
-}
+localhost:8080/repairs
 
-localhost:8080/naprawy
-
-localhost:8080/modyfikuj/opis_usterki
+localhost:8080/modify/description
 
 {
-   "naprawaID": 1,
-   "opis_usterki": "opis usterki",
-   "stan": "stan - rozpoczęty",
-   "protokol_naprawy": "protokol naprawy"
+   "repairId": 1,
+   "description": "opis usterki",
+   "state": "stan - rozpoczęty",
+   "repairProtocol": "protokol naprawy"
 }
 
-localhost:8080/modyfikuj/rozpoczecie_naprawy
+localhost:8080/modify/repairStartDate
 {
-    "naprawaID": 1,
-    "data_rozpoczecia": "2024-12-30"
+    "repairId": 1,
+    "startDate": "2024-12-30"
 }
 
-localhost:8080/modyfikuj/zakonczenie_naprawy
+localhost:8080/modify/repairEndDate
 
 {
-    "naprawaID": 1,
-    "data_zakonczenia": "2025-01-12"
+    "repairId": 1,
+    "endDate": "2025-01-12"
 }
 
-localhost:8080/naprawy
+localhost:8080/repairs
 
 

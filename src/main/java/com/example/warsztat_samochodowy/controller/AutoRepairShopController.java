@@ -15,6 +15,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
+//@CrossOrigin(origins = "http://localhost:3000")
 public class AutoRepairShopController {
 
     private final AutoRepairShopService autoRepairShopService;

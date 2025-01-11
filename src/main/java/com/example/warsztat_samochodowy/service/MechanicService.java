@@ -18,9 +18,9 @@ public class MechanicService {
     private RepairRepository repairRepository;
     private MechanicRepository mechanicRepository;
 
-    public Repair acceptTicket(Repair naprawa, Mechanic mechanik) {
-        Optional<Mechanic> mechanicInDatabase = mechanicRepository.findByFirstNameAndSecondName(mechanik.getFirstName(), mechanik.getSecondName());
-        Optional<Repair> repairInDatabase = repairRepository.findByRepairId(naprawa.getRepairId());
+    public Repair acceptTicket(int repairId, String mechanicUsername) {
+        Optional<Mechanic> mechanicInDatabase = mechanicRepository.findByUsername(mechanicUsername);
+        Optional<Repair> repairInDatabase = repairRepository.findByRepairId(repairId);
         if (mechanicInDatabase.isEmpty()) {
             throw new MechanicNotFoundException("Mechanic is not employed in car repair shop");
         }
