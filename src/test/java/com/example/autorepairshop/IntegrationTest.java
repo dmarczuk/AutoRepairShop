@@ -5,6 +5,7 @@ import com.example.autorepairshop.model.Client;
 import com.example.autorepairshop.model.Mechanic;
 import com.example.autorepairshop.repository.ClientRepository;
 import com.example.autorepairshop.service.AutoRepairShopService;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -67,8 +68,8 @@ public class IntegrationTest {
             //then = do dokończenia
             MvcResult mvcResult = listOfClients.andExpect(status().isOk()).andReturn();
             String contentAsString = mvcResult.getResponse().getContentAsString();
-            List<Client> client = Collections.singletonList(objectMapper.readValue(contentAsString, Client.class));
-            Assertions.assertThat(client.get(0).getEmail()).isEqualTo("bozenakowalska777@gmail.com");
+            List<Client> clients = objectMapper.readValue(contentAsString, new TypeReference<List<Client>>() {});
+            Assertions.assertThat(clients.get(0).getEmail()).isEqualTo("bozenakowalska777@gmail.com");
             //then
             Assertions.assertThat(klienci).hasSize(2);
             Assertions.assertThat(klienci.get(0).getPhoneNumber()).isEqualTo(testClient.getPhoneNumber());
