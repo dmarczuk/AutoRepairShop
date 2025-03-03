@@ -1,6 +1,5 @@
 package com.example.autorepairshop;
 
-import com.example.autorepairshop.error.ClientAlreadyExistException;
 import com.example.autorepairshop.model.Car;
 import com.example.autorepairshop.model.Client;
 import com.example.autorepairshop.model.Mechanic;
@@ -22,7 +21,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.*;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -30,9 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 public class IntegrationTest {
-    private ClientRepository clientRepository;
-    @Autowired
-    private AutoRepairShopService autoService;
+
     @Autowired
     public MockMvc mockMvc;
     @Autowired
@@ -199,7 +195,7 @@ public class IntegrationTest {
         ResultActions listOfMechanics = mockMvc.perform(get("/mechanics").contentType(MediaType.APPLICATION_JSON_VALUE));
 
         //then = do dokończenia
-        mvcResult = listOfClients.andExpect(status().isOk()).andReturn();
+        mvcResult = listOfMechanics.andExpect(status().isOk()).andReturn();
         contentAsString = mvcResult.getResponse().getContentAsString();
         List<Client> mechanics = objectMapper.readValue(contentAsString, new TypeReference<>() {
         });
@@ -229,23 +225,23 @@ public class IntegrationTest {
         //then
         mvcResult = perform.andExpect(status().isCreated()).andReturn();
         contentAsString = mvcResult.getResponse().getContentAsString();
-        Car savedCarFromTicket = objectMapper.readValue(contentAsString, Car.class);
-        Assertions.assertThat(savedCarFromTicket.getVin()).isEqualTo("ABSDAE221293821283");
+        Repair savedRepair = objectMapper.readValue(contentAsString, Repair.class);
+        Assertions.assertThat(savedRepair.getCar().getVin()).isEqualTo("XXXDAE221293821283");
 
         // etap 12 - accept ticket
         //given
-        perform = mockMvc.perform(patch("/accept/ticket").content("""
-               {
-                   "repairId": 1,
-                   "mechanicUsername": "michal"
-               }
-               """.trim()).contentType(MediaType.APPLICATION_JSON_VALUE));
+        perform = mockMvc.perform(patch("/accept/repair").content("""
+                 {
+                     "repairId": 1,
+                     "mechanicUsername": "michal"
+                 }
+                """.trim()).contentType(MediaType.APPLICATION_JSON_VALUE));
         //when
         //then
         mvcResult = perform.andExpect(status().isOk()).andReturn();
         contentAsString = mvcResult.getResponse().getContentAsString();
         Repair acceptRepair = objectMapper.readValue(contentAsString, Repair.class);
-        Assertions.assertThat(acceptRepair.getMechanic().getUsername()).isEqualTo("Stanislaw");
+        Assertions.assertThat(acceptRepair.getMechanic().getUsername()).isEqualTo("michal");
 
         // etap 13 - modify descritpion
         //given
@@ -279,11 +275,11 @@ public class IntegrationTest {
         mvcResult = perform.andExpect(status().isOk()).andReturn();
         contentAsString = mvcResult.getResponse().getContentAsString();
         modifiedRepair = objectMapper.readValue(contentAsString, Repair.class);
-        Assertions.assertThat(modifiedRepair.getStartDate()).isEqualTo("2024-10-02T02:00:00.000");
+        Assertions.assertThat(modifiedRepair.getStartDate()).isEqualTo("2024-12-30T01:00:00.000");
 
         // etap 15 - modify end date of repair
         //given
-        perform = mockMvc.perform(patch("/modyfikuj/repairEndDate").content("""
+        perform = mockMvc.perform(patch("/modify/repairEndDate").content("""
                  {
                       "repairId": 1,
                       "endDate": "2025-01-12"
@@ -294,35 +290,7 @@ public class IntegrationTest {
         mvcResult = perform.andExpect(status().isOk()).andReturn();
         contentAsString = mvcResult.getResponse().getContentAsString();
         modifiedRepair = objectMapper.readValue(contentAsString, Repair.class);
-        Assertions.assertThat(modifiedRepair.getEndDate()).isEqualTo("2024-10-11T02:00:00.000");
+        Assertions.assertThat(modifiedRepair.getEndDate()).isEqualTo("2025-01-12T01:00:00.000");
     }
-
-//        @Test
-//        void wyjatki() {
-//            //etap 1 - dodanie klienta z istniejącym numerem
-//            //given
-//            Klient testKlient = new Klient("Julia", "Przybylska", "432124541", "juliaprzybylska.gmail.com");
-//            Klient testKlient2 = new Klient("Julia", "Przybylska", "432124541", "juliaprzybylska.gmail.com");
-//            //when
-//            Klient zapisanyKlient = warsztatSerwis.Dodawanie_klienta(testKlient);
-//            Klient zapisanyKlient2 = warsztatSerwis.Dodawanie_klienta(testKlient2);
-//            //then
-//            Assertions.assertThat(zapisanyKlient).isNotNull();
-//        }
-
-//    @Test
-//    void KlientAlreadyExistException() {
-//        //etap 1 - dodanie klienta z istniejącym numerem
-//        //given
-//        Client testKlient = new Client("Julia", "Przybylska", "432124541", "juliaprzybylska.gmail.com");
-//        Client testKlient2 = new Client("Julia", "Przybylska", "432124541", "juliaprzybylska.gmail.com");
-//        //when
-//        Client zapisanyKlient = autoService.addClient(testKlient);
-//        //Klient zapisanyKlient2 = warsztat_serwis.Dodawanie_klienta(testKlient2);
-//        //then
-//        assertThatThrownBy(() -> autoService.addClient(testKlient2))
-//                .isInstanceOf(ClientAlreadyExistException.class)
-//                .hasMessage("The client with the given phone number already exists in the database");
-//    }
 
 }
