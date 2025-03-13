@@ -8,12 +8,14 @@ import com.example.autorepairshop.repository.ClientRepository;
 import com.example.autorepairshop.service.AutoRepairShopService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -27,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class IntegrationTest {
 
     @Autowired
@@ -275,7 +278,7 @@ public class IntegrationTest {
         mvcResult = perform.andExpect(status().isOk()).andReturn();
         contentAsString = mvcResult.getResponse().getContentAsString();
         modifiedRepair = objectMapper.readValue(contentAsString, Repair.class);
-        Assertions.assertThat(modifiedRepair.getStartDate()).isEqualTo("2024-12-30T01:00:00.000");
+        Assertions.assertThat(modifiedRepair.getStartDate()).isEqualTo("2024-12-30");
 
         // etap 15 - modify end date of repair
         //given
@@ -290,7 +293,7 @@ public class IntegrationTest {
         mvcResult = perform.andExpect(status().isOk()).andReturn();
         contentAsString = mvcResult.getResponse().getContentAsString();
         modifiedRepair = objectMapper.readValue(contentAsString, Repair.class);
-        Assertions.assertThat(modifiedRepair.getEndDate()).isEqualTo("2025-01-12T01:00:00.000");
+        Assertions.assertThat(modifiedRepair.getEndDate()).isEqualTo("2025-01-12");
     }
 
 }

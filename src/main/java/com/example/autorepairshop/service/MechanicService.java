@@ -63,7 +63,7 @@ public class MechanicService {
             throw new RepairNotFoundException("The specified repair was not found in the database");
         }
         repairInDatabase.get().setEndDate(repair.getEndDate());
-        if (repair.getEndDate().before(repairInDatabase.get().getStartDate())) {
+        if (repair.getEndDate().isBefore(repairInDatabase.get().getStartDate())) {
             throw new EndDateBeforeDateStartsException("The end date cannot be earlier than the start date");
         }
         repairRepository.save(repairInDatabase.get());
