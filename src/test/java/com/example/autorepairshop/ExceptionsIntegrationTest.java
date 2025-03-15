@@ -41,7 +41,7 @@ public class ExceptionsIntegrationTest {
 
     @Test
     void ClientAlreadyExistException() {
-        //etap 1 - dodanie klienta z istniejącym numerem
+        //etap 1 - add client with existing phone number
         //given
         Client testClient = new Client("Julia", "Przybylska", "432124548", "juliaprzybylska.gmail.com");
         Client testClient2 = new Client("Julia", "Przybylska", "432124548", "juliaprzybylska.gmail.com");

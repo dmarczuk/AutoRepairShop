@@ -11,14 +11,4 @@ public class AutoRepairShopApplication {
     }
 
 
-//    @Bean
-//    public WebMvcConfigurer corsConfigurer() {
-//        return new WebMvcConfigurer() {
-//            @Override
-//            public void addCorsMappings(CorsRegistry registry) {
-//                registry.addMapping("/clients").allowedOrigins("http://localhost:3000");
-//            }
-//        };
-//    }
-
 }
