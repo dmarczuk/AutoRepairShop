@@ -28,7 +28,7 @@ public class AutoRepairShopController {
     @PostMapping("/add/client")
     public ResponseEntity<Client> addClient(@RequestBody Client client){
         Client newCLient = autoRepairShopService.addClient(client);
-        return ResponseEntity.ok(newCLient);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newCLient);
     }
 
     @PatchMapping("/modify/client")
@@ -45,13 +45,13 @@ public class AutoRepairShopController {
     @PostMapping("/add/mechanic")
     public ResponseEntity<Mechanic> addMechanic(@RequestBody Mechanic mechanic){
         Mechanic newMechanic = autoRepairShopService.addMechanic(mechanic);
-        return ResponseEntity.ok(newMechanic);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newMechanic);
     }
 
     @PatchMapping("/fire/mechanic")
     public ResponseEntity<Mechanic> fireMechanic(@RequestBody Mechanic mechanic){
-        autoRepairShopService.fireMechanic(mechanic);
-        return ResponseEntity.ok(mechanic);
+        Mechanic firedMechanic = autoRepairShopService.fireMechanic(mechanic);
+        return ResponseEntity.ok(firedMechanic);
     }
 
     @GetMapping("/repairs")
@@ -62,7 +62,7 @@ public class AutoRepairShopController {
     @PatchMapping("/add/repair")
     public ResponseEntity<Repair> addRepair(@RequestBody RepairDto repairDtoDto){
         Repair newRepair = autoRepairShopService.addMechanicToRepair(repairDtoDto);
-        return ResponseEntity.ok(newRepair);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newRepair);
     }
 
     @GetMapping("/cars")

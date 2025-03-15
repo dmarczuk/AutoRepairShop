@@ -63,7 +63,7 @@ public class AutoRepairShopService {
         }
         return mechanicRepository.save(newMechanic);
     }
-    public void fireMechanic(Mechanic mechanic){
+    public Mechanic fireMechanic(Mechanic mechanic){
         Optional<Mechanic> mechanicInDatabase = mechanicRepository.findByUsername(mechanic.getUsername());
         if(mechanicInDatabase.isPresent()){
             if (mechanicInDatabase.get().getIfEmployed().equals("YES")) {
@@ -72,6 +72,7 @@ public class AutoRepairShopService {
                 mechanicInDatabase.get().setIfEmployed("YES");
             }
             mechanicRepository.save(mechanicInDatabase.get());
+            return mechanicInDatabase.get();
         } else {
             throw new MechanicNotFoundException("Mechanic with the given username not found");
         }
