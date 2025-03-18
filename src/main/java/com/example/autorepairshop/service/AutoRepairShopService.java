@@ -42,13 +42,13 @@ public class AutoRepairShopService {
         return clientRepository.save(client);
     }
     public Client clientDataModification(UpdateClientRequest client){
-        Optional<Client> clientInDatabase = clientRepository.findByPhoneNumber(client.getPhoneNumber());
+        Optional<Client> clientInDatabase = clientRepository.findByPhoneNumber(client.phoneNumber());
         if (clientInDatabase.isEmpty()) {
             throw new ClientNotFoundException("Client with the given phone number not found");
         }
-        clientInDatabase.get().setFirstName(client.getFirstName());
-        clientInDatabase.get().setSecondName(client.getSecondName());
-        clientInDatabase.get().setEmail(client.getEmail());
+        clientInDatabase.get().setFirstName(client.firstName());
+        clientInDatabase.get().setSecondName(client.secondName());
+        clientInDatabase.get().setEmail(client.email());
         return clientRepository.save(clientInDatabase.get());
     }
     public List<Mechanic> showMechanics(){
@@ -85,11 +85,11 @@ public class AutoRepairShopService {
     }
 
     public Repair addMechanicToRepair(RepairDto repairDto) {
-        Optional<Mechanic> mechanik = mechanicRepository.findByUsername(repairDto.getMechanic().getUsername());
+        Optional<Mechanic> mechanik = mechanicRepository.findByUsername(repairDto.mechanic().getUsername());
         if (mechanik.isEmpty()) {
             throw new MechanicNotFoundException("Mechanic with the given username not found");
         }
-        Optional<Repair> repair = repairRepository.findById(repairDto.getNaprawaId());
+        Optional<Repair> repair = repairRepository.findById(repairDto.naprawaId());
         if (repair.isEmpty()) {
             throw new RepairNotFoundException("Repair not found. Mechanic cannot be added");
         }

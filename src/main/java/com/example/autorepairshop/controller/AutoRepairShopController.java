@@ -72,7 +72,7 @@ public class AutoRepairShopController {
 
     @PostMapping("/add/car")
     public ResponseEntity<Car> addCar(@RequestBody CarClientDto carClientDtoDto){
-        Car newCar = autoRepairShopService.addCar(carClientDtoDto.getCar(), carClientDtoDto.getPhoneNumber());
+        Car newCar = autoRepairShopService.addCar(carClientDtoDto.car(), carClientDtoDto.phoneNumber());
         return ResponseEntity.status(HttpStatus.CREATED).body(newCar);
     }
 
@@ -84,7 +84,7 @@ public class AutoRepairShopController {
 
     @PostMapping("/add/new/ticket")
     public ResponseEntity<Repair> newTicket(@RequestBody TicketDto ticket) {
-        Repair repair = autoRepairShopService.addNewTicket(ticket.getClient(), ticket.getCar());
+        Repair repair = autoRepairShopService.addNewTicket(ticket.client(), ticket.car());
         return ResponseEntity.status(HttpStatus.CREATED).body(repair);
     }
 }

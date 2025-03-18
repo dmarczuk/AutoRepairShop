@@ -15,7 +15,7 @@ public class MechanicController {
 
     @PatchMapping("/accept/repair")
     public ResponseEntity<Repair> acceptTicket (@RequestBody RepairMechanicDto repairMechanicDto){
-        Repair acceptedTicket = mechanicService.acceptTicket(repairMechanicDto.getRepairId(), repairMechanicDto.getMechanicUsername());
+        Repair acceptedTicket = mechanicService.acceptTicket(repairMechanicDto.repairId(), repairMechanicDto.mechanicUsername());
         return ResponseEntity.ok(acceptedTicket);
     }
 
