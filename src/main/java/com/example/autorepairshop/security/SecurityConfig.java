@@ -73,6 +73,11 @@ public class SecurityConfig implements UserDetailsService{
                         //.requestMatchers("/modify/description", "/modify/repairStartDate", "/modify/repairEndDate").hasAnyRole("MECHANIC", "ADMIN")
                         .requestMatchers("/modify/client", "/fire/mechanic").permitAll()
                         //.requestMatchers("/modify/client", "/fire/mechanic").hasRole("ADMIN")
+                       .requestMatchers(
+                             "/v2/api-docs/**",   // OpenAPI JSON Docs
+                             "/swagger-ui/**",    // Swagger UI
+                             "/swagger-ui.html"   // Swagger Main Page
+                        ).permitAll()  // Allow access without authentication
                         .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults())
